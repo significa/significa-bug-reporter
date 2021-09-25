@@ -1,0 +1,46 @@
+{
+  "name": "significa-bug-reporter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint \"./src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "npm run link -- --fix",
+    "format": "prettier \"./src/**/*.+(ts|tsx|js|jsx|json|yml|yaml|md|mdx)\"",
+    "format:write": "npm run format -- --write",
+    "validate:format": "npm run format -- --check",
+    "validate:build": "tsc --noEmit",
+    "validate": "npm run lint && npm run validate:format && npm run validate:build",
+    "postinstall": "husky install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "next": "^11.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@next/eslint-plugin-next": "^11.1.2",
+    "@significa/eslint-config": "^2.0.0",
+    "@significa/prettier-config": "^2.0.0",
+    "@significa/tsconfig-config": "^2.0.0",
+    "@svgr/webpack": "^5.5.0",
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.1",
+    "@types/react": "^17.0.24",
+    "@types/react-dom": "^17.0.9",
+    "eslint": "^7.32.0",
+    "husky": "^7.0.2",
+    "jest": "^27.2.2",
+    "lint-staged": "^11.1.2",
+    "typescript": "^4.4.3"
+  }
+}
