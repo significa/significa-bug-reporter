@@ -1,6 +1,3 @@
-// use this as an index for all UI components
-// e.g. export { Button } from './Button'
-
 export { globalStyles } from './globalStyles'
 export { Box, Flex, FlexCenter, Container, Stack, Wrap } from './Layout'
 export { Button } from './Button'
@@ -10,3 +7,5 @@ export { Modal } from './Modal'
 
 export { Label } from './Label'
 export { Input } from './Input'
+export { Select } from './Select'
+export { Checkbox, Radio } from './CheckboxRadio'

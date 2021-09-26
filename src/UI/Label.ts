@@ -3,7 +3,7 @@ import { styled } from 'lib/style'
 export const Label = styled('label', {
   display: 'block',
   fontSize: '$sm',
-  fontWeight: '$normal',
+  fontWeight: '$medium',
 
   mb: '$8',
 

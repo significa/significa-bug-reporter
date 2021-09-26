@@ -47,6 +47,7 @@ const light = {
   background: '$gray200',
   offset: '$gray50',
   foreground: '$gray900',
+  secondary: '$gray600',
 
   accent: '$pink500',
   muted: '$gray400',
@@ -56,6 +57,7 @@ const dark = {
   background: '$gray900',
   offset: '$gray700',
   foreground: '$gray50',
+  secondary: '$gray700',
 
   accent: '$pink500',
   muted: '$gray800',
@@ -64,7 +66,8 @@ const dark = {
 const green = {
   background: '$green500',
   offset: '$green200',
-  foreground: '$gray200',
+  foreground: '$gray50',
+  secondary: '$green300',
 
   accent: '$pink500',
   muted: '$green600',

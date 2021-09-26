@@ -8,9 +8,17 @@ export const Link = styled('a', {
   transition: 'background-size $smooth',
 
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: '100% 100%',
+  backgroundPosition: '100% 105%',
+
+  outline: 'none',
+
+  '&:focus-visible': {
+    boxShadow: '$focus',
+  },
 
   '@hover': {
+    cursor: 'pointer',
+
     '&:hover': {
       backgroundPosition: '0% 100%',
     },
@@ -20,7 +28,8 @@ export const Link = styled('a', {
     color: {
       subtle: {
         color: '$foreground',
-        backgroundImage: 'linear-gradient($offset, $offset)',
+        backgroundImage:
+          'linear-gradient(hsla($foreground, 0.3), hsla($foreground, 0.3))',
       },
       accent: {
         color: '$accent',
@@ -29,20 +38,20 @@ export const Link = styled('a', {
     },
     thickness: {
       sm: {
-        backgroundSize: '0 $space$2',
+        backgroundSize: '100% $space$2',
 
         '@hover': {
           '&:hover': {
-            backgroundSize: '100% $space$2',
+            backgroundSize: '0 $space$2',
           },
         },
       },
       md: {
-        backgroundSize: '0 $sizes$4',
+        backgroundSize: '100% $sizes$4',
 
         '@hover': {
           '&:hover': {
-            backgroundSize: '100% $space$4',
+            backgroundSize: '0 $space$4',
           },
         },
       },
@@ -51,19 +60,6 @@ export const Link = styled('a', {
 
   defaultVariants: {
     thickness: 'sm',
-    color: 'accent',
-  },
-})
-
-export const SubtleLink = styled('a', {
-  textDecoration: 'none',
-
-  color: '$foreground',
-  transition: 'color $appearance',
-
-  '@hover': {
-    '&:hover': {
-      color: '$accent',
-    },
+    color: 'subtle',
   },
 })

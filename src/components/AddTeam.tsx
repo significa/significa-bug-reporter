@@ -66,7 +66,7 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
             onChange={(e) => setCode(e.currentTarget.value)}
           />
           {validating ? (
-            <Text size="xs" css={{ mt: '$8', color: '$muted' }}>
+            <Text size="xs" css={{ mt: '$8', color: '$secondary' }}>
               Validating code
             </Text>
           ) : (
@@ -76,7 +76,7 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
                   {error}
                 </Text>
               ) : (
-                <Text size="xs" css={{ mt: '$8', color: '$muted' }}>
+                <Text size="xs" css={{ mt: '$8', color: '$secondary' }}>
                   Paste code to validate
                 </Text>
               )}

@@ -3,6 +3,9 @@ import { globalCss } from 'lib/style'
 export const globalStyles = globalCss({
   html: {
     boxSizing: 'border-box',
+    textRendering: 'geometricPrecision',
+    fontSmooth: 'auto',
+    webkitFontSmoothing: 'antialiased',
   },
   '*, *:before, *:after': {
     boxSizing: 'inherit',

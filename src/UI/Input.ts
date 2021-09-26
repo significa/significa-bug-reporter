@@ -1,8 +1,10 @@
 import { styled } from 'lib/style'
 
-export const Input = styled('input', {
+export const inputStyle = {
   appearance: 'none',
   boxShadow: 'none',
+
+  accentColor: '$accent',
 
   border: 'none',
   borderBottom: '1px solid hsla($foreground, 0.2)',
@@ -18,13 +20,21 @@ export const Input = styled('input', {
   color: '$foreground',
   fontFamily: '$sans',
   fontSize: '$sm',
-  lineHeight: '$none',
+  lineHeight: '$normal',
   fontWeight: '$normal',
+
+  resize: 'vertical',
 
   transition: 'all $appearance',
 
   '&::placeholder': {
     color: 'hsla($foreground, 0.4)',
+  },
+
+  '@hover': {
+    '&:hover:enabled': {
+      borderBottomColor: 'hsla($foreground, 0.4)',
+    },
   },
 
   '&:focus': {
@@ -38,14 +48,22 @@ export const Input = styled('input', {
 
   '&:focus-visible': {
     boxShadow: '$focus',
-    borderBottom: '1px solid hsla($foreground, 0)',
+    borderBottomColor: 'hsla($foreground, 0)',
   },
 
   variants: {
     error: {
       true: {
         borderBottomColor: '$accent',
+
+        '@hover': {
+          '&:hover:enabled': {
+            borderBottomColor: '$accent',
+          },
+        },
       },
     },
   },
-})
+} as const
+
+export const Input = styled('input', inputStyle)

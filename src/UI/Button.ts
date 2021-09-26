@@ -14,12 +14,10 @@ export const Button = styled('button', {
   cursor: 'pointer',
 
   fontFamily: '$sans',
-  fontSize: '$sm',
   lineHeight: '$none',
   whiteSpace: 'nowrap',
   textDecoration: 'none',
 
-  p: '$12 $16',
   borderRadius: '$sm',
 
   outline: 'none',
@@ -34,6 +32,16 @@ export const Button = styled('button', {
   },
 
   variants: {
+    size: {
+      sm: {
+        fontSize: '$xs',
+        p: '$8',
+      },
+      md: {
+        fontSize: '$sm',
+        p: '$12 $16',
+      },
+    },
     variant: {
       primary: {
         background: '$foreground',
@@ -75,9 +83,27 @@ export const Button = styled('button', {
           color: 'hsla($foreground, 0.6)',
         },
       },
+      ghost: {
+        background: '$background',
+        color: '$foreground',
+        boxShadow: '0 0 0 1px hsla($colors$foreground, 1)',
+
+        transition: 'box-shadow $motion, opacity $appearance',
+
+        '@hover': {
+          '&:hover:enabled': {
+            opacity: 0.8,
+          },
+        },
+
+        '&:active:enabled': {
+          opacity: 0.6,
+        },
+      },
     },
   },
   defaultVariants: {
     variant: 'primary',
+    size: 'md',
   },
 })

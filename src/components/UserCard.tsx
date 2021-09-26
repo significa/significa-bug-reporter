@@ -30,10 +30,10 @@ export const UserCard = (): JSX.Element | null => {
       <Text size="sm" fontWeight="medium" css={{ mt: '$24' }}>
         {!loggingOut ? (
           <Link
-            href="#"
             color="subtle"
-            onClick={(e) => {
-              e.preventDefault()
+            role="button"
+            tabIndex={0}
+            onClick={() => {
               setLoggingOut(true)
             }}
           >
@@ -41,12 +41,12 @@ export const UserCard = (): JSX.Element | null => {
           </Link>
         ) : (
           <Link
-            onMouseLeave={(e) => {
-              e.preventDefault()
+            color="subtle"
+            role="button"
+            tabIndex={0}
+            onMouseLeave={() => {
               setLoggingOut(false)
             }}
-            href="#"
-            color="subtle"
             onClick={() => {
               logout()
             }}
