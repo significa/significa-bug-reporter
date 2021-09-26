@@ -1,6 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Text, Box, Button, Flex, Input, Label, Modal, Stack } from 'UI'
+import { useDebounce } from 'common/hooks/useDebounce'
+import { usePrevious } from 'common/hooks/usePrevious'
 import { useStore } from 'lib/store'
 
 type AddTeamProps = {
@@ -11,21 +13,32 @@ type AddTeamProps = {
 export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
   const [code, setCode] = useState('')
   const [label, setLabel] = useState('')
+
   const teams = useStore((state) => state.teams)
   const teamAlreadyThere = useMemo(() => {
     return teams.some((team) => team.code === code)
   }, [code, teams])
-  const isValidCode = false
-  const isValid =
-    !teamAlreadyThere && code.length > 0 && label.length > 0 && isValidCode
 
-  /**
-   * TODO: Validate team code
-   * On code paste, check if team exists and load appropriate data.
-   * Pre-fill team label with team name.
-   *
-   * Only allow to submit when data was successfully loaded.
-   */
+  const { valid, validating } = useValidate({
+    code,
+    setLabel,
+    skip: teamAlreadyThere,
+  })
+
+  const isValid =
+    !validating &&
+    !teamAlreadyThere &&
+    code.length > 0 &&
+    label.length > 0 &&
+    !!valid
+
+  let error: string | null = null
+  if (teamAlreadyThere) {
+    error = 'Team already exists'
+  }
+  if (valid === false) {
+    error = 'Invalid code'
+  }
 
   return (
     <Modal isOpen onClose={onCancel} css={{ p: '$24' }}>
@@ -45,17 +58,29 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
           <Input
             // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
-            error={teamAlreadyThere}
+            error={!!error}
             id="code"
             type="text"
             placeholder="Paste in the code"
             value={code}
             onChange={(e) => setCode(e.currentTarget.value)}
           />
-          {teamAlreadyThere && (
-            <Text size="xs" css={{ mt: '$8', color: '$accent' }}>
-              Team already exists
+          {validating ? (
+            <Text size="xs" css={{ mt: '$8', color: '$muted' }}>
+              Validating code
             </Text>
+          ) : (
+            <>
+              {error ? (
+                <Text size="xs" css={{ mt: '$8', color: '$accent' }}>
+                  {error}
+                </Text>
+              ) : (
+                <Text size="xs" css={{ mt: '$8', color: '$muted' }}>
+                  Paste code to validate
+                </Text>
+              )}
+            </>
           )}
         </Box>
         <Box>
@@ -63,7 +88,7 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
             Label
           </Label>
           <Input
-            disabled={!isValidCode}
+            disabled={!valid}
             id="label"
             type="text"
             placeholder="Type in a label so you can identify this team"
@@ -82,4 +107,52 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
       </Flex>
     </Modal>
   )
+}
+
+const useValidate = ({
+  code,
+  setLabel,
+  skip,
+}: {
+  code: string
+  setLabel: (label: string) => void
+  skip: boolean
+}) => {
+  const [valid, setValid] = useState<undefined | boolean>()
+  const [validating, setValidating] = useState(false)
+  const debouncedCode = useDebounce(code)
+  const prevCode = usePrevious(debouncedCode)
+
+  const checkCode = useCallback(async () => {
+    if (!debouncedCode || skip || debouncedCode === prevCode) {
+      return setValid(undefined)
+    }
+
+    setValidating(true)
+    try {
+      const res = await fetch('/api/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: debouncedCode }),
+      })
+      if (!res.ok) {
+        throw new Error('Invalid code')
+      }
+
+      setValid(true)
+      const json = await res.json()
+
+      if (json.name) setLabel(json.name)
+    } catch (error) {
+      setValid(false)
+    } finally {
+      setValidating(false)
+    }
+  }, [debouncedCode, prevCode, setLabel, skip])
+
+  useEffect(() => {
+    checkCode()
+  }, [checkCode])
+
+  return { valid, validating }
 }
