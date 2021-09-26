@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
+import { Layout } from 'components/Layout'
 import { Login } from 'components/Login'
 import { Main } from 'components/Main'
 import { UserCard } from 'components/UserCard'
@@ -26,15 +27,6 @@ const IndexPage: React.FC = () => {
         <Login />
       )}
     </Layout>
-  )
-}
-
-const Layout: React.FC = ({ children }) => {
-  return (
-    <div>
-      <h1>Bug Reporting</h1>
-      {children}
-    </div>
   )
 }
 

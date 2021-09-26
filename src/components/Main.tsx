@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+import { Box, Button, Text } from 'UI'
 import { useStore } from 'lib/store'
 
 import { AddTeam } from './AddTeam'
@@ -22,14 +23,23 @@ export const Main = (): JSX.Element => {
         />
       )}
       {teams.length === 0 ? (
-        <div>
-          <h2>You have no teams</h2>
-          <p>
-            Ask your Project Manager for your team’s code so you can start
-            reporting directly
-          </p>
-          <button onClick={() => setAddingTeam(true)}>Add Team</button>
-        </div>
+        <Box
+          css={{
+            mt: '$16',
+            p: '$24',
+            border: '1px dashed $muted',
+            borderRadius: '$md',
+          }}
+        >
+          <Text as="h2" size="lg" fontWeight="medium">
+            You have no teams
+          </Text>
+          <Text css={{ mt: '$8', mb: '$24' }} lineHeight="normal">
+            Ask your Project Manager for your team&apos;s code so you can start
+            reporting any issue directly
+          </Text>
+          <Button onClick={() => setAddingTeam(true)}>Add Team</Button>
+        </Box>
       ) : (
         <Form onAddTeam={() => setAddingTeam(true)} />
       )}

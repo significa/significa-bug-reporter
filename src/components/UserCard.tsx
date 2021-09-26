@@ -1,52 +1,60 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
+import { Box, Link, Text } from 'UI'
 import { useStore } from 'lib/store'
+import { greenTheme } from 'lib/style'
 
 export const UserCard = (): JSX.Element | null => {
   const [loggingOut, setLoggingOut] = useState(false)
   const user = useStore((state) => state.user)
   const logout = useStore((state) => state.logout)
 
-  useEffect(
-    function autoCancel() {
-      let timeout: NodeJS.Timeout
-      if (loggingOut) {
-        timeout = setTimeout(() => {
-          setLoggingOut(false)
-        }, 2000)
-      }
-
-      return () => {
-        clearTimeout(timeout)
-      }
-    },
-    [loggingOut]
-  )
-
   if (!user) return null
 
   return (
-    <div>
-      <p>Reporting as</p>
-      <h2>{user}</h2>
-      {!loggingOut ? (
-        <button
-          onClick={(e) => {
-            e.preventDefault()
-            setLoggingOut(true)
-          }}
-        >
-          Log out
-        </button>
-      ) : (
-        <button
-          onClick={() => {
-            logout()
-          }}
-        >
-          Are you sure? Click to continue
-        </button>
-      )}
-    </div>
+    <Box
+      className={greenTheme.toString()}
+      css={{
+        background: '$background',
+        color: '$foreground',
+        p: '$24',
+        borderRadius: '$md',
+      }}
+    >
+      <Text size="sm" fontWeight="medium" css={{ color: '$offset', mb: '$4' }}>
+        Reporting as
+      </Text>
+      <Text size="lg" fontWeight="medium">
+        {user}
+      </Text>
+      <Text size="sm" fontWeight="medium" css={{ mt: '$24' }}>
+        {!loggingOut ? (
+          <Link
+            href="#"
+            color="subtle"
+            onClick={(e) => {
+              e.preventDefault()
+              setLoggingOut(true)
+            }}
+          >
+            Log out
+          </Link>
+        ) : (
+          <Link
+            onMouseLeave={(e) => {
+              e.preventDefault()
+              setLoggingOut(false)
+            }}
+            href="#"
+            color="subtle"
+            onClick={() => {
+              logout()
+            }}
+          >
+            Click to confirm
+          </Link>
+        )}
+      </Text>
+    </Box>
   )
 }
