@@ -7,7 +7,7 @@ export const Layout: React.FC = ({ children }) => {
       <Flex css={{ alignItems: 'center', py: '$32' }}>
         <Logo />
         <Text as="h1" size="md" fontWeight="medium" css={{ ml: '$8' }}>
-          Bug reporting
+          Significa Bug Reporter
         </Text>
       </Flex>
       {children}

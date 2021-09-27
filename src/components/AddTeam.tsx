@@ -111,7 +111,12 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
           <Button type="submit" disabled={!isValid}>
             Add team
           </Button>
-          <Button variant="secondary" onClick={onCancel} css={{ ml: '$16' }}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={onCancel}
+            css={{ ml: '$16' }}
+          >
             Cancel
           </Button>
         </Flex>
