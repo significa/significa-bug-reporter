@@ -1,9 +1,6 @@
-import { LinearClient } from '@linear/sdk'
 import { NextApiRequest, NextApiResponse } from 'next'
 
-const linearClient = new LinearClient({
-  accessToken: process.env.LINEAR_OAUTH_ACCESS_TOKEN,
-})
+import { getTeamNameFromCode } from 'lib/linear'
 
 export default async (
   req: NextApiRequest,
@@ -18,20 +15,13 @@ export default async (
   }
 
   try {
-    const id = Buffer.from(req.body.code, 'base64').toString('utf-8')
-    const { nodes } = await linearClient.teams({
-      filter: {
-        id: {
-          eq: id,
-        },
-      },
-    })
+    const name = await getTeamNameFromCode(req.body.code)
 
-    if (nodes.length === 0) {
+    if (!name) {
       throw new Error('No team found')
     }
 
-    return res.status(200).json({ message: 'ok', name: nodes[0].name })
+    return res.status(200).json({ message: 'ok', name })
   } catch (error) {
     return res.status(400).json({ message: 'Invalid code' })
   }
