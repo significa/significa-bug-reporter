@@ -27,7 +27,7 @@ export const useStore = create<StoreState>(
       },
       addTeam: (team: Team) => {
         set((state) => ({
-          teams: [...state.teams, team],
+          teams: [...state.teams.filter((t) => t.code !== t.code), team],
           selectedTeam: team.code,
         }))
       },
