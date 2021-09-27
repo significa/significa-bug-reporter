@@ -1,3 +1,4 @@
+import Head from 'next/head'
 import React, { useEffect, useState } from 'react'
 
 import { Layout } from 'components/Layout'
@@ -18,6 +19,9 @@ const IndexPage: React.FC = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>Significa Bug Reporter</title>
+      </Head>
       {user ? (
         <>
           <UserCard />
