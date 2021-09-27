@@ -3,7 +3,7 @@ import { styled } from 'lib/style'
 export const Button = styled('button', {
   position: 'relative',
 
-  display: 'flex',
+  display: 'inline-flex',
   alignItems: 'center',
   justifyContent: 'center',
 
@@ -53,14 +53,14 @@ export const Button = styled('button', {
           'transform $motion, box-shadow $motion, opacity $appearance',
 
         '@hover': {
-          '&:hover:enabled': {
+          '&:hover:not(:disabled)': {
             outline: 0,
             transform: 'translate(-$$transform, -$$transform)',
             boxShadow: '$$shadow $$shadow 0 0 hsla($colors$foreground, 30%)',
           },
         },
 
-        '&:active:enabled': {
+        '&:active:not(:disabled)': {
           opacity: 0.8,
           boxShadow: 'unset',
           transform: 'unset',

@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from 'react'
 import { Box, Text, Input, Label, Link, Select, Stack, Button } from 'UI'
 import { useStore } from 'lib/store'
 
+import { Attach, Attachments, Status } from './Attachments'
 import { Priority, PriorityContext, PriorityRadio } from './Priority'
 
 type FormProps = {
@@ -29,6 +30,11 @@ export const Form = ({
   const [technical, setTechnical] = useState('')
   const [priority, setPriority] = useState<Priority>(Priority.low)
 
+  const [attachments, setAttachments] = useState<Attach[]>([])
+  const uploadingAttachs = attachments.some(
+    (attach) => attach.status === Status.Pending
+  )
+
   const isValid =
     !!user &&
     !!selectedTeam &&
@@ -36,7 +42,8 @@ export const Form = ({
     !!description &&
     !!steps &&
     !!technical &&
-    !!priority
+    !!priority &&
+    !uploadingAttachs
 
   const handleSubmit = async () => {
     if (!isValid) return
@@ -58,6 +65,9 @@ export const Form = ({
           steps,
           technical,
           priority,
+          attachments: attachments
+            .filter((attach) => attach.status === Status.Success)
+            .map((attach) => attach.url),
         }),
       })
 
@@ -196,6 +206,14 @@ export const Form = ({
               setTechnical(e.currentTarget.value)
             }
           />
+        </Box>
+
+        <Box>
+          <Label>Attachments</Label>
+          <Button role="button" as="label" htmlFor="attachment">
+            Add attachment
+          </Button>
+          <Attachments attachments={attachments} onChange={setAttachments} />
         </Box>
 
         <Box>

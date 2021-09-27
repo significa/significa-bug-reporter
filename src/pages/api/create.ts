@@ -2,15 +2,23 @@ import { LinearClient } from '@linear/sdk'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const linearClient = new LinearClient({
-  apiKey: process.env.LINEAR_API_KEY,
+  accessToken: process.env.LINEAR_OAUTH_ACCESS_TOKEN,
 })
+
+const isImage = (url: string) => {
+  return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url)
+}
+
+const isVideo = (url: string) => {
+  return /\.(mov|avi|wmv|flv|3gp|mp4|mpg)$/i.test(url)
+}
 
 export default async (
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> => {
   if (req.method !== 'POST') {
-    res.status(404).end()
+    return res.status(404).end()
   }
 
   const fields: string[] = [
@@ -32,6 +40,7 @@ export default async (
   }
 
   try {
+    const attachments: string[] = req.body?.attachments || []
     const [author, team, title, description, steps, technical, priority] =
       fields
 
@@ -44,26 +53,61 @@ export default async (
       critical: '🔴 **Critical**',
     }
 
+    const getAttachments = (): string => {
+      if (attachments.length === 0) return ''
+
+      return (
+        '## Attachments\n' +
+        '___ \n' +
+        attachments
+          .sort((a) => {
+            if (isImage(a)) return 2
+
+            if (isVideo(a)) return 1
+
+            return -1
+          })
+          .map((attach) => {
+            if (isImage(attach)) {
+              return `![${attach}](${encodeURI(attach)})  \n`
+            }
+
+            if (isVideo(attach)) {
+              return `- 🍿 Video: [${attach}](${encodeURI(attach)})  \n`
+            }
+
+            return `- 📎 File: [${attach}](${encodeURI(attach)})  \n`
+          })
+          .join('') +
+        '&nbsp;  \n' +
+        '&nbsp;  \n' +
+        '&nbsp;  \n'
+      )
+    }
+
+    const payload =
+      '## Description\n' +
+      '___ \n' +
+      description +
+      '&nbsp;  \n' +
+      '&nbsp;  \n' +
+      '## Steps to reproduce\n' +
+      '___ \n' +
+      steps +
+      '&nbsp;  \n' +
+      '&nbsp;  \n' +
+      '## Technical Information\n' +
+      '___ \n' +
+      technical +
+      '&nbsp;  \n' +
+      '&nbsp;  \n' +
+      getAttachments() +
+      `${priorityLabel[priority]} priority bug reported by ${author}`
+
     const { success, issue } = await linearClient.issueCreate({
       teamId,
       title,
-      description:
-        '## Description\n' +
-        '___ \n' +
-        description +
-        '&nbsp;  \n' +
-        '&nbsp;  \n' +
-        '## Steps to reproduce\n' +
-        '___ \n' +
-        steps +
-        '&nbsp;  \n' +
-        '&nbsp;  \n' +
-        '## Technical Information\n' +
-        '___ \n' +
-        technical +
-        '&nbsp;  \n' +
-        '&nbsp;  \n' +
-        `${priorityLabel[priority]} priority bug reported by ${author}`,
+      description: payload,
     })
 
     if (!success) {

@@ -42,69 +42,80 @@ export const AddTeam = ({ onCancel, onAdd }: AddTeamProps): JSX.Element => {
 
   return (
     <Modal isOpen onClose={onCancel} css={{ p: '$24' }}>
-      <Text size="lg" fontWeight="medium">
-        Add team
-      </Text>
-
-      <Text size="sm" lineHeight="normal" css={{ mt: '$8', mb: '$24' }}>
-        Paste in the code provided and add a label so you can easily identify
-        this team. This label is only for you.
-      </Text>
-      <Stack direction="vertical" spacing="$24" css={{ alignItems: 'stretch' }}>
-        <Box>
-          <Label htmlFor="code" required>
-            Code
-          </Label>
-          <Input
-            // eslint-disable-next-line jsx-a11y/no-autofocus
-            autoFocus
-            error={!!error}
-            id="code"
-            type="text"
-            placeholder="Paste in the code"
-            value={code}
-            onChange={(e) => setCode(e.currentTarget.value)}
-          />
-          {validating ? (
-            <Text size="xs" css={{ mt: '$8', color: '$secondary' }}>
-              Validating code
-            </Text>
-          ) : (
-            <>
-              {error ? (
-                <Text size="xs" css={{ mt: '$8', color: '$accent' }}>
-                  {error}
-                </Text>
-              ) : (
-                <Text size="xs" css={{ mt: '$8', color: '$secondary' }}>
-                  Paste code to validate
-                </Text>
-              )}
-            </>
-          )}
-        </Box>
-        <Box>
-          <Label htmlFor="label" required>
-            Label
-          </Label>
-          <Input
-            disabled={!valid}
-            id="label"
-            type="text"
-            placeholder="Type in a label so you can identify this team"
-            value={label}
-            onChange={(e) => setLabel(e.currentTarget.value)}
-          />
-        </Box>
-      </Stack>
-      <Flex css={{ mt: '$32' }}>
-        <Button disabled={!isValid} onClick={() => onAdd({ code, label })}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (isValid) onAdd({ code, label })
+        }}
+      >
+        <Text size="lg" fontWeight="medium">
           Add team
-        </Button>
-        <Button variant="secondary" onClick={onCancel} css={{ ml: '$16' }}>
-          Cancel
-        </Button>
-      </Flex>
+        </Text>
+
+        <Text size="sm" lineHeight="normal" css={{ mt: '$8', mb: '$24' }}>
+          Paste in the code provided and add a label so you can easily identify
+          this team. This label is only for you.
+        </Text>
+        <Stack
+          direction="vertical"
+          spacing="$24"
+          css={{ alignItems: 'stretch' }}
+        >
+          <Box>
+            <Label htmlFor="code" required>
+              Code
+            </Label>
+            <Input
+              // eslint-disable-next-line jsx-a11y/no-autofocus
+              autoFocus
+              error={!!error}
+              id="code"
+              type="text"
+              placeholder="Paste in the code"
+              value={code}
+              onChange={(e) => setCode(e.currentTarget.value)}
+            />
+            {validating ? (
+              <Text size="xs" css={{ mt: '$8', color: '$secondary' }}>
+                Validating code
+              </Text>
+            ) : (
+              <>
+                {error ? (
+                  <Text size="xs" css={{ mt: '$8', color: '$accent' }}>
+                    {error}
+                  </Text>
+                ) : (
+                  <Text size="xs" css={{ mt: '$8', color: '$secondary' }}>
+                    Paste code to validate
+                  </Text>
+                )}
+              </>
+            )}
+          </Box>
+          <Box>
+            <Label htmlFor="label" required>
+              Label
+            </Label>
+            <Input
+              disabled={!valid}
+              id="label"
+              type="text"
+              placeholder="Type in a label so you can identify this team"
+              value={label}
+              onChange={(e) => setLabel(e.currentTarget.value)}
+            />
+          </Box>
+        </Stack>
+        <Flex css={{ mt: '$32' }}>
+          <Button type="submit" disabled={!isValid}>
+            Add team
+          </Button>
+          <Button variant="secondary" onClick={onCancel} css={{ ml: '$16' }}>
+            Cancel
+          </Button>
+        </Flex>
+      </form>
     </Modal>
   )
 }

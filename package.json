@@ -21,6 +21,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.34.0",
+    "@aws-sdk/s3-request-presigner": "^3.34.0",
     "@linear/sdk": "^1.20.0",
     "@stitches/react": "^1.2.1",
     "next": "^11.1.2",

@@ -2,7 +2,7 @@ import { LinearClient } from '@linear/sdk'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 const linearClient = new LinearClient({
-  apiKey: process.env.LINEAR_API_KEY,
+  accessToken: process.env.LINEAR_OAUTH_ACCESS_TOKEN,
 })
 
 export default async (
@@ -10,7 +10,7 @@ export default async (
   res: NextApiResponse
 ): Promise<void> => {
   if (req.method !== 'POST') {
-    res.status(404).end()
+    return res.status(404).end()
   }
 
   if (!req.body?.code || typeof req.body.code !== 'string') {
