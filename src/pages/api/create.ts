@@ -10,15 +10,23 @@ export default async (
     return res.status(404).end()
   }
 
+  const type: 'bug' | 'request' = req.body?.type
+
+  if (!type) {
+    return res.status(400).json({ message: 'type is required' })
+  }
+
   const fields: string[] = [
     req.body?.author,
     req.body?.team,
     req.body?.title,
     req.body?.description,
-    req.body?.steps,
-    req.body?.technical,
     req.body?.priority,
   ]
+
+  if (type === 'bug') {
+    fields.push(req.body?.steps, req.body?.technical)
+  }
 
   if (fields.some((field) => !field || typeof field !== 'string')) {
     return res.status(400).json({
@@ -34,6 +42,7 @@ export default async (
       fields
 
     await createIssue({
+      type,
       author,
       team,
       title,
@@ -46,6 +55,6 @@ export default async (
 
     return res.status(200).json({ message: 'ok' })
   } catch (error) {
-    return res.status(400).json({ message: 'Invalid code' })
+    return res.status(400).json({ message: 'Could not create issue' })
   }
 }

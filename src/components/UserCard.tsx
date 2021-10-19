@@ -21,7 +21,11 @@ export const UserCard = (): JSX.Element | null => {
         borderRadius: '$md',
       }}
     >
-      <Text size="sm" fontWeight="medium" css={{ color: '$offset', mb: '$4' }}>
+      <Text
+        size="sm"
+        fontWeight="medium"
+        css={{ color: '$secondary', mb: '$4' }}
+      >
         Reporting as
       </Text>
       <Text size="lg" fontWeight="medium">

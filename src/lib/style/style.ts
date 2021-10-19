@@ -9,6 +9,9 @@ import { colorUtils } from './colorUtils'
 const toRem = (px: number) => px / 16 + 'rem'
 
 const palette = {
+  white: '0, 0%, 100%',
+  black: '0, 0%, 0%',
+
   gray50: '0, 0%, 98%',
   gray100: '40, 7%, 92%',
   gray200: '45, 6%, 86%',
@@ -44,18 +47,16 @@ const palette = {
 }
 
 const light = {
-  background: '$gray200',
-  offset: '$gray50',
-  foreground: '$gray900',
+  background: '$gray50',
+  foreground: '$gray800',
   secondary: '$gray600',
 
   accent: '$pink500',
-  muted: '$gray400',
+  muted: '$gray100',
 }
 
 const dark = {
   background: '$gray900',
-  offset: '$gray700',
   foreground: '$gray50',
   secondary: '$gray700',
 
@@ -65,11 +66,10 @@ const dark = {
 
 const green = {
   background: '$green500',
-  offset: '$green200',
   foreground: '$gray50',
-  secondary: '$green300',
+  secondary: '$green200',
 
-  accent: '$pink500',
+  accent: '$orange300',
   muted: '$green600',
 }
 
@@ -133,7 +133,7 @@ const stitchesConfig = createStitches({
     },
     fontWeights: {
       normal: '400',
-      medium: '500',
+      medium: '600',
     },
     lineHeights: {
       none: '1',

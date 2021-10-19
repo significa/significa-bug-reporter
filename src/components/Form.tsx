@@ -24,6 +24,8 @@ export const Form = ({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
+  const [type, setType] = useState<'bug' | 'request'>('bug')
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [steps, setSteps] = useState('')
@@ -35,7 +37,7 @@ export const Form = ({
     (attach) => attach.status === Status.Pending
   )
 
-  const isValid =
+  const isValidBug =
     !!user &&
     !!selectedTeam &&
     !!title &&
@@ -44,6 +46,11 @@ export const Form = ({
     !!technical &&
     !!priority &&
     !uploadingAttachs
+
+  const isValidRequest =
+    !!user && !!selectedTeam && !!title && !!description && !uploadingAttachs
+
+  const isValid = type === 'bug' ? isValidBug : isValidRequest
 
   const handleSubmit = async () => {
     if (!isValid) return
@@ -58,6 +65,7 @@ export const Form = ({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          type,
           author: user,
           team: selectedTeam,
           title,
@@ -97,7 +105,7 @@ export const Form = ({
       <Stack
         direction="vertical"
         spacing="$40"
-        css={{ alignItems: 'stretch', my: '$32' }}
+        css={{ alignItems: 'stretch', mt: '$32', mb: '$80' }}
       >
         <Box>
           <Label htmlFor="team" required>
@@ -136,13 +144,30 @@ export const Form = ({
         </Box>
 
         <Box>
+          <Label htmlFor="team" required>
+            Type
+          </Label>
+          <Select
+            name="type"
+            id="type"
+            value={type}
+            onChange={(e) => {
+              setType(e.currentTarget.value as 'bug' | 'request')
+            }}
+          >
+            <option value="bug">Bug</option>
+            <option value="request">Request</option>
+          </Select>
+        </Box>
+
+        <Box>
           <Label htmlFor="title" required>
             Title
           </Label>
           <Input
             name="title"
             id="title"
-            placeholder="Issue title"
+            placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.currentTarget.value)}
           />
@@ -160,7 +185,7 @@ export const Form = ({
             rows={3}
             name="description"
             id="description"
-            placeholder="Issue description"
+            placeholder="Description"
             value={description}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               setDescription(e.currentTarget.value)
@@ -168,45 +193,49 @@ export const Form = ({
           />
         </Box>
 
-        <Box>
-          <Label htmlFor="steps" required>
-            Steps to reproduce
-          </Label>
-          <Text as="p" css={{ color: '$secondary', mb: '$8' }}>
-            Detailed instructions on how to reproduce this issue
-          </Text>
-          <Input
-            as="textarea"
-            rows={3}
-            name="steps"
-            id="steps"
-            placeholder="Describe the steps to reproduce"
-            value={steps}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setSteps(e.currentTarget.value)
-            }
-          />
-        </Box>
+        {type === 'bug' && (
+          <>
+            <Box>
+              <Label htmlFor="steps" required>
+                Steps to reproduce
+              </Label>
+              <Text as="p" css={{ color: '$secondary', mb: '$8' }}>
+                Detailed instructions on how to reproduce this issue
+              </Text>
+              <Input
+                as="textarea"
+                rows={3}
+                name="steps"
+                id="steps"
+                placeholder="Describe the steps to reproduce"
+                value={steps}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                  setSteps(e.currentTarget.value)
+                }
+              />
+            </Box>
 
-        <Box>
-          <Label htmlFor="technical" required>
-            Technical Information
-          </Label>
-          <Text as="p" css={{ color: '$secondary', mb: '$8' }}>
-            Your Operating System, Browser, Device, etc.
-          </Text>
-          <Input
-            as="textarea"
-            rows={3}
-            name="technical"
-            id="technical"
-            placeholder="Add some technical Information"
-            value={technical}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setTechnical(e.currentTarget.value)
-            }
-          />
-        </Box>
+            <Box>
+              <Label htmlFor="technical" required>
+                Technical Information
+              </Label>
+              <Text as="p" css={{ color: '$secondary', mb: '$8' }}>
+                Your Operating System, Browser, Device, etc.
+              </Text>
+              <Input
+                as="textarea"
+                rows={3}
+                name="technical"
+                id="technical"
+                placeholder="Add some technical Information"
+                value={technical}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                  setTechnical(e.currentTarget.value)
+                }
+              />
+            </Box>
+          </>
+        )}
 
         <Box>
           <Label>Attachments</Label>
@@ -221,7 +250,7 @@ export const Form = ({
             Priority
           </Label>
 
-          <PriorityContext.Provider value={{ priority, setPriority }}>
+          <PriorityContext.Provider value={{ priority, setPriority, type }}>
             <Box>
               <PriorityRadio value={Priority.low} />
               <PriorityRadio value={Priority.medium} />

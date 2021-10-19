@@ -28,14 +28,14 @@ export default class Document extends NextDocument {
           />
           <link
             rel="preload"
-            href="/fonts/Sohne-Kraftig.woff"
+            href="/fonts/Sohne-Halbfett.woff"
             as="font"
             type="font/woff"
             crossOrigin="anonymous"
           />
           <link
             rel="preload"
-            href="/fonts/Sohne-Kraftig.woff2"
+            href="/fonts/Sohne-Halbfett.woff2"
             as="font"
             type="font/woff2"
             crossOrigin="anonymous"
@@ -51,9 +51,9 @@ export default class Document extends NextDocument {
 }
 @font-face {
   font-family: 'Söhne';
-  font-weight: 500;
+  font-weight: 600;
   font-display: swap;
-  src: url(/fonts/Sohne-Kraftig.woff2) format('woff2'), url(/fonts/Sohne-Kraftig.woff) format('woff');
+  src: url(/fonts/Sohne-Halbfett.woff2) format('woff2'), url(/fonts/Sohne-Halbfett.woff) format('woff');
 }
 `,
             }}

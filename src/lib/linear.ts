@@ -34,90 +34,99 @@ const isVideo = (url: string) => {
   return /\.(mov|avi|wmv|flv|3gp|mp4|mpg)$/i.test(url)
 }
 
-export const createIssue = async (args: {
-  author: string
-  team: string
-  title: string
-  description: string
-  steps: string
-  technical: string
-  priority: string
-  attachments: string[]
-}): Promise<void> => {
-  const {
-    author,
-    team,
-    title,
-    description,
-    steps,
-    technical,
-    priority,
-    attachments,
-  } = args
+const getAttachments = (attachments: string[]): string => {
+  if (attachments.length === 0) return ''
+
+  return (
+    '## Attachments\n' +
+    '___ \n' +
+    attachments
+      .sort((a) => {
+        if (isImage(a)) return 2
+
+        if (isVideo(a)) return 1
+
+        return -1
+      })
+      .map((attach) => {
+        if (isImage(attach)) {
+          return `![${attach}](${encodeURI(attach)})  \n`
+        }
+
+        if (isVideo(attach)) {
+          return `- 🍿 Video: [${attach}](${encodeURI(attach)})  \n`
+        }
+
+        return `- 📎 File: [${attach}](${encodeURI(attach)})  \n`
+      })
+      .join('') +
+    '&nbsp;  \n' +
+    '&nbsp;  \n' +
+    '&nbsp;  \n'
+  )
+}
+
+type Args =
+  | {
+      type: 'bug'
+      author: string
+      team: string
+      title: string
+      description: string
+      steps: string
+      technical: string
+      priority: string
+      attachments: string[]
+    }
+  | {
+      type: 'request'
+      author: string
+      team: string
+      title: string
+      description: string
+      priority: string
+      attachments: string[]
+    }
+
+export const createIssue = async (args: Args): Promise<void> => {
+  const { type, author, team, title, description, priority, attachments } = args
 
   const teamId = Buffer.from(team, 'base64').toString('utf-8')
 
   const priorityLabel: Record<string, string> = {
-    low: '🟢 **Low**',
-    medium: '🟡 **Medium**',
-    high: '🟠 **High**',
-    critical: '🔴 **Critical**',
+    low: '🟢  **Low**',
+    medium: '🟡  **Medium**',
+    high: '🟠  **High**',
+    critical: '🔴  **Critical**',
   }
 
-  const getAttachments = (): string => {
-    if (attachments.length === 0) return ''
+  let payload = `## Description\n___ \n${description}`
 
-    return (
-      '## Attachments\n' +
+  if (type === 'bug') {
+    const { steps, technical } = args
+
+    payload +=
+      '&nbsp;  \n' +
+      '&nbsp;  \n' +
+      '## Steps to reproduce\n' +
       '___ \n' +
-      attachments
-        .sort((a) => {
-          if (isImage(a)) return 2
-
-          if (isVideo(a)) return 1
-
-          return -1
-        })
-        .map((attach) => {
-          if (isImage(attach)) {
-            return `![${attach}](${encodeURI(attach)})  \n`
-          }
-
-          if (isVideo(attach)) {
-            return `- 🍿 Video: [${attach}](${encodeURI(attach)})  \n`
-          }
-
-          return `- 📎 File: [${attach}](${encodeURI(attach)})  \n`
-        })
-        .join('') +
+      steps +
       '&nbsp;  \n' +
       '&nbsp;  \n' +
-      '&nbsp;  \n'
-    )
+      '## Technical Information\n' +
+      '___ \n' +
+      technical
   }
 
-  const payload =
-    '## Description\n' +
-    '___ \n' +
-    description +
+  payload +=
     '&nbsp;  \n' +
     '&nbsp;  \n' +
-    '## Steps to reproduce\n' +
-    '___ \n' +
-    steps +
-    '&nbsp;  \n' +
-    '&nbsp;  \n' +
-    '## Technical Information\n' +
-    '___ \n' +
-    technical +
-    '&nbsp;  \n' +
-    '&nbsp;  \n' +
-    getAttachments() +
-    `${priorityLabel[priority]} priority bug reported by ${author}`
+    getAttachments(attachments) +
+    `${priorityLabel[priority]} priority ${type} reported by ${author}`
 
   const { success } = await linearClient.issueCreate({
     teamId,
-    title,
+    title: `[${type}] ${title}`,
     description: payload,
   })
 

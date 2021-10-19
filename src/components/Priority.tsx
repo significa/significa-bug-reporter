@@ -12,8 +12,10 @@ export enum Priority {
 export const PriorityContext = createContext<{
   priority: Priority
   setPriority: (value: Priority) => void
+  type: 'bug' | 'request'
 }>({
   priority: Priority.low,
+  type: 'bug',
   setPriority: () => {
     // noop
   },
@@ -30,18 +32,29 @@ const labels = {
   [Priority.critical]: 'Critical',
 }
 
-const descriptions = {
+const bugDescriptions = {
   [Priority.low]:
-    'A non-urgent bug, this bug does not effect core functionality of the product.',
+    'A non-urgent bug, this bug does not affect core functionality of the product.',
   [Priority.medium]:
-    'This bug effects functionality but on a non-core user journey.',
+    'This bug affects functionality but on a non-core user journey.',
   [Priority.high]:
     'This bug is causing core-functionality problems but not breaking the product.',
   [Priority.critical]: 'The product can not function with this bug.',
 }
 
+const requestDescriptions = {
+  [Priority.low]: `A non-urgent request, to be tackled whenever there's time.`,
+  [Priority.medium]:
+    'This request is important but on a non-core user journey.',
+  [Priority.high]:
+    'This is a core-functionality request that needs to be tackled as soon as possible.',
+  [Priority.critical]: 'The product can not function without this.',
+}
+
 export const PriorityRadio = ({ value }: PriorityProps): JSX.Element => {
-  const { priority, setPriority } = useContext(PriorityContext)
+  const { priority, setPriority, type } = useContext(PriorityContext)
+
+  const descriptions = type === 'bug' ? bugDescriptions : requestDescriptions
 
   return (
     <Flex
