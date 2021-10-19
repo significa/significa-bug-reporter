@@ -38,7 +38,7 @@ export default async (
 
   try {
     const attachments: string[] = req.body?.attachments || []
-    const [author, team, title, description, steps, technical, priority] =
+    const [author, team, title, description, priority, steps, technical] =
       fields
 
     await createIssue({
