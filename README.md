@@ -1,4 +1,13 @@
-# create-svelte
+# Significa Bug reporter
+
+## Development
+
+- Set a github classic Personal Access Token in your shell: `GITHUB_ACCESS_TOKEN`
+
+- Get the `.env`: run `1password-secrets local get`
+
+
+# Original Doc from svelte, please adapt or delete
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
