@@ -3,5 +3,8 @@
   import Start from '$components/start.svelte';
 </script>
 
-<Start/>
+<div class="p-10">
+  <Start/>
+</div>
+
 
