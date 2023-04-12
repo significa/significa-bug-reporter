@@ -4,7 +4,7 @@
 
 - Set a github classic Personal Access Token in your shell: `GITHUB_ACCESS_TOKEN`
 
-- Get the `.env`: run `1password-secrets local get`
+- Get the `.env`: run `1password-secrets local pull`
 
 
 # Original Doc from svelte, please adapt or delete
