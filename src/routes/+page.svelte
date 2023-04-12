@@ -1,4 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+<script lang="ts">
+   import '$styles/index.css';
+   import Start from '$components/start.svelte';
+   export let data;
+   console.log(data)
+</script>
+
+<div class="p-10">
+   <Start /> 
+</div>
+
+
