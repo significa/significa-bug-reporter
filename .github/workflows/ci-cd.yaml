@@ -16,7 +16,7 @@ jobs:
     uses: significa/actions/.github/workflows/vercel-app.yaml@main
     permissions:
       contents: read
-      packages: write
+      packages: read
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

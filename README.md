@@ -6,7 +6,6 @@
 
 - Get the `.env`: run `1password-secrets local pull`
 
-
 # Original Doc from svelte, please adapt or delete
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
