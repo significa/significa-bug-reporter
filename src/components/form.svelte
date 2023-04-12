@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { getTeams } from '$lib/linear';
   import {
     Button,
     Input,
@@ -40,6 +41,7 @@
   let error = false;
 
   function onSubmit(e: any) {}
+
 </script>
 
 <form on:submit|preventDefault={onSubmit}>
