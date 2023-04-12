@@ -1,39 +1,37 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 
-const themes = ['light', 'dark'];
-
-type Theme = 'light' | 'dark';
-
-const isTheme = (theme: string): theme is Theme => {
-  return themes.includes(theme);
-};
-
-const getFromLocalStorage = (): Theme => {
+type Team = {
+    id: string;
+    name: string
+}
+type BugReporter = {
+    userName: string;
+    teams: Team[]
+}
+const getFromLocalStorage = (): BugReporter | undefined => {
   if (browser) {
-    const theme = window.localStorage.getItem('theme');
-
-    if (theme && isTheme(theme)) {
-      return theme;
+    const bugReporter = window.localStorage.getItem('bug-reporter');
+    if (bugReporter !== undefined && bugReporter !== null) {
+      return JSON.parse(bugReporter);
     }
-  }
-  return 'light';
+}
 };
 
-const createTheme = () => {
-  const { subscribe, update } = writable<Theme>(getFromLocalStorage());
+const createBugReporter = () => {
+  const { subscribe, update } = writable<BugReporter>(getFromLocalStorage());
 
   return {
     subscribe,
-    toogle: () => update((v) => (v === 'light' ? 'dark' : 'light'))
+    setUser: (user: string) => update((prev) => {return {user, ...prev}	}),
+    //setTeams: (teams: Team[]) => update((prev) => {return {teams, ...prev}}),
   };
 };
 
-export const theme = createTheme();
+export const bug = createBugReporter();
 
-theme.subscribe(($theme) => {
+bug.subscribe(($bug) => {
   if (browser) {
-    window.localStorage.setItem('theme', $theme);
-    document.documentElement.setAttribute('data-theme', $theme);
+    window.localStorage.setItem('bug-reporter', JSON.stringify($bug));
   }
 });

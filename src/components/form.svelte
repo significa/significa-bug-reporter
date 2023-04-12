@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { getTeams } from '$lib/linear';
   import {
     Button,
     Input,

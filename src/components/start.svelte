@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Button, Input } from '@significa/svelte-ui';
   import Name from './name.svelte'
-
+  import {bug} from '$lib/store'
    let user: string | undefined = undefined;
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
@@ -11,8 +11,11 @@
       const [key, value] = field;
       data[key] = value;
     }
-    user = data.name
+    console.log(data.name, 'DATA')
+
   }
+
+  console.log(bug)
 </script>
 
 <div class="flex justify-center">

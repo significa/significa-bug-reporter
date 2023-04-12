@@ -1,6 +1,9 @@
 import { getTeams } from "$lib/linear";
 
 export const load = async () => {
-    const teams = await getTeams()
-    return { teams };
+    try {
+        return {teams : await getTeams()}
+    } catch (err) {
+        console.log(err)
+    }
 };
