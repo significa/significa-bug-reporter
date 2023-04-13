@@ -9,7 +9,7 @@
     Label,
     FileInput
   } from '@significa/svelte-ui';
-  import { validateForm } from '../utils/validateForm';
+  import { enhance, type SubmitFunction } from '$app/forms';
 
   let teams = $bugStore.teams;
 
@@ -39,23 +39,13 @@
   $: selectedType = 'bug';
   let error = false;
 
-  //TODO Connect this function with linear client create issue
-  function onSubmit(e: any) {
-    const formData = new FormData(e.target);
-    const isValid = validateForm(formData);
-    console.log(isValid);
-
-    const data: any = {};
-    for (let field of formData) {
-      const [key, value] = field;
-      data[key] = value;
-    }
-
-    console.log(data);
-  }
+  // To prevent the page to update
+  const onSubmit: SubmitFunction = (input) => {
+    console.log(input);
+  };
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form action="?/submitReport" method="POST" use:enhance={onSubmit}>
   {#if teams}
     <div class="mt-6">
       <Label htmlFor="team">Team</Label>
