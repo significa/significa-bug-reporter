@@ -7,11 +7,14 @@
     Label,
     FileInput
   } from '@significa/svelte-ui';
+  import { validateForm } from '../utils/validateForm';
 
   let teams: { id: string; name: string }[] | null = null;
+  let storage: string | null = null;
+
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser) {
-    let storage = localStorage.getItem('bug-reporter');
+    storage = localStorage.getItem('bug-reporter');
     console.log(storage);
     if (storage) {
       teams = JSON.parse(storage).team;
@@ -47,12 +50,16 @@
   //TODO Connect this function with linear client create issue
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
+    const isValid = validateForm(formData);
+    console.log(isValid);
 
     const data: any = {};
     for (let field of formData) {
       const [key, value] = field;
       data[key] = value;
     }
+
+    console.log(data);
   }
 </script>
 
