@@ -1,4 +1,4 @@
-export function validateForm(formData: any) {
+export function validateForm(formData: FormData) {
   const team = String(formData.get('team'));
   const type = String(formData.get('type'));
   const title = String(formData.get('title'));
