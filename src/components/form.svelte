@@ -40,7 +40,8 @@
       description: 'The product can not function with this bug.'
     }
   ];
-  let bug = true;
+
+  $: selectedType = 'bug';
   let error = false;
 
   //TODO Connect this function with linear client create issue
@@ -70,8 +71,13 @@
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="team">Type</Label>
-    <FloatingSelect label="Type" name="type" id="type">
+    <Label htmlFor="type">Type</Label>
+    <FloatingSelect
+      label="Type"
+      name="type"
+      id="type"
+      bind:value={selectedType}
+    >
       <option value="bug">Bug</option>
       <option value="request">Request</option>
     </FloatingSelect>
@@ -94,7 +100,7 @@
     />
   </div>
 
-  {#if bug}
+  {#if selectedType == 'bug'}
     <div class="mt-6">
       <Label htmlFor="steps">Steps to reproduce</Label>
       <p>Detailed instructions on how to reproduce this issue</p>
