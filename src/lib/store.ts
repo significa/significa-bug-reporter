@@ -35,9 +35,9 @@ const createBugReporter = () => {
   };
 };
 
-export const bug = createBugReporter();
+export const bugStore = createBugReporter();
 
-bug.subscribe(($bug) => {
+bugStore.subscribe(($bug) => {
   if (isBrowser) {
     window.localStorage.setItem('bug-reporter', JSON.stringify($bug));
   }

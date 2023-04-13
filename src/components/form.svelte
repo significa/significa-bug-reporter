@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { bug as bugStore } from '$lib/store';
+  import { bugStore } from '$lib/store';
 
   import {
     Button,
