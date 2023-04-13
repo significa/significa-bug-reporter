@@ -1,0 +1,23 @@
+name: CI/CD
+
+on:
+  push:
+  pull_request:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+jobs:
+  test-and-publish:
+    name: Test and publish
+    permissions:
+      contents: read
+      packages: read
+    uses: significa/actions/.github/workflows/vercel-app.yaml@main
+    with:
+      test_command: null
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
