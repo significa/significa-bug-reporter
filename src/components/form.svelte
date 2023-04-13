@@ -48,7 +48,7 @@
 <form action="?/submitReport" method="POST" use:enhance={onSubmit}>
   {#if teams}
     <div class="mt-6">
-      <Label htmlFor="team">Team</Label>
+      <Label htmlFor="team" required>Team</Label>
       <FloatingSelect label="Select a team" name="team" id="team">
         {#each teams as team}
           <option value={team.id}>
@@ -60,7 +60,7 @@
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="type">Type</Label>
+    <Label htmlFor="type" required>Type</Label>
     <FloatingSelect
       label="Type"
       name="type"
@@ -73,12 +73,12 @@
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="title">Title</Label>
+    <Label htmlFor="title" required>Title</Label>
     <Input name="title" id="title" placeholder="Title" value="" />
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="description">Description</Label>
+    <Label htmlFor="description" required>Description</Label>
     <p>Try to be as descriptive as possible.</p>
     <Input
       as="textarea"
@@ -91,7 +91,7 @@
 
   {#if selectedType == 'bug'}
     <div class="mt-6">
-      <Label htmlFor="steps">Steps to reproduce</Label>
+      <Label htmlFor="steps" required>Steps to reproduce</Label>
       <p>Detailed instructions on how to reproduce this issue</p>
       <Input
         as="textarea"
@@ -103,7 +103,7 @@
     </div>
 
     <div class="mt-6">
-      <Label htmlFor="technical">Technical Information</Label>
+      <Label htmlFor="technical" required>Technical Information</Label>
       <p>Your Operating System, Browser, Device, etc.</p>
       <Input
         as="textarea"
@@ -122,7 +122,7 @@
   </div>
 
   <div class="mt-6 border p-2">
-    <Label htmlFor="priority">Priority</Label>
+    <Label htmlFor="priority" required>Priority</Label>
 
     {#each priorities as priority}
       <div class="flex row items-center mt-3">
