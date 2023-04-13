@@ -10,7 +10,7 @@
     FileInput
   } from '@significa/svelte-ui';
 
-  let teams = $bugStore.team;
+  let teams = $bugStore.teams;
 
   let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
