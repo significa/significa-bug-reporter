@@ -6,7 +6,7 @@ type Team = {
 };
 type BugReporter = {
   userName: string | null;
-  teams: Team[];
+  team: Team[];
 };
 const isBrowser = typeof window !== 'undefined';
 
@@ -26,11 +26,11 @@ const createBugReporter = () => {
     subscribe,
     setUser: (user: string | null) =>
       update((prev) => {
-        return { user, ...prev };
+        return { ...prev, userName: user };
       }),
     setTeams: (team: Team[]) =>
       update((prev) => {
-        return { team, ...prev };
+        return { ...prev, team };
       })
   };
 };
