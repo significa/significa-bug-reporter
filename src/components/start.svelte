@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Button, Input } from '@significa/svelte-ui';
   import Name from './name.svelte';
-  import { bug } from '$lib/store';
-  let user: string | null = null;
+  import { bugStore } from '$lib/store';
+
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
 
@@ -11,19 +11,12 @@
       const [key, value] = field;
       data[key] = value;
     }
-    bug.setUser(data.name);
-  }
-  const isBrowser = typeof window !== 'undefined';
-  if (isBrowser) {
-    let storage = localStorage.getItem('bug-reporter');
-    if (storage) {
-      user = JSON.parse(storage).user;
-    }
+    bugStore.setUser(data.name);
   }
 </script>
 
 <div class="flex justify-center">
-  {#if !user}
+  {#if !$bugStore.userName}
     <div class="p-4">
       <form on:submit|preventDefault={onSubmit}>
         <h1 class="text-6xl">Howdy</h1>
@@ -45,8 +38,7 @@
         </div>
       </form>
     </div>
-  {/if}
-  {#if user}
-    <Name {user} />
+  {:else}
+    <Name />
   {/if}
 </div>

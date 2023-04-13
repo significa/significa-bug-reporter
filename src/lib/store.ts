@@ -26,18 +26,18 @@ const createBugReporter = () => {
     subscribe,
     setUser: (user: string | null) =>
       update((prev) => {
-        return { user, ...prev };
+        return { ...prev, userName: user };
       }),
-    setTeams: (team: Team[]) =>
+    setTeams: (teams: Team[]) =>
       update((prev) => {
-        return { team, ...prev };
+        return { ...prev, teams };
       })
   };
 };
 
-export const bug = createBugReporter();
+export const bugStore = createBugReporter();
 
-bug.subscribe(($bug) => {
+bugStore.subscribe(($bug) => {
   if (isBrowser) {
     window.localStorage.setItem('bug-reporter', JSON.stringify($bug));
   }
