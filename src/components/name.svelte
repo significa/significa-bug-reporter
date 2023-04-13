@@ -1,4 +1,6 @@
 <script>
+  // @ts-nocheck
+
   /**
    * @type {string}
    */
@@ -6,9 +8,10 @@
   import { TextButton } from '@significa/svelte-ui';
   import Form from './form.svelte';
   import { bug } from '$lib/store';
-  
-  function onClick () {
-    bug.setUser(null)
+
+  //redirect after logout / fix store update
+  function onClick() {
+    bug.setUser(null);
   }
 </script>
 

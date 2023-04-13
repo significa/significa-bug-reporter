@@ -5,17 +5,16 @@
     FloatingSelect,
     Radio,
     Label,
-    FileInput,
-    TextButton
+    FileInput
   } from '@significa/svelte-ui';
 
-  let teams: {id: string, name: string}[] | null = null;
+  let teams: { id: string; name: string }[] | null = null;
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser) {
-    let storage = localStorage.getItem('bug-reporter')
-    console.log(storage)
-    if(storage) {
-      teams = JSON.parse(storage).team 
+    let storage = localStorage.getItem('bug-reporter');
+    console.log(storage);
+    if (storage) {
+      teams = JSON.parse(storage).team;
     }
   }
 
@@ -44,11 +43,20 @@
   let bug = true;
   let error = false;
 
-  function onSubmit(e: any) {}
+  //TODO Connect this function with linear client create issue
+  function onSubmit(e: any) {
+    const formData = new FormData(e.target);
+
+    const data: any = {};
+    for (let field of formData) {
+      const [key, value] = field;
+      data[key] = value;
+    }
+  }
 </script>
 
 <form on:submit|preventDefault={onSubmit}>
-    {#if teams}        
+  {#if teams}
     <div class="mt-6">
       <Label htmlFor="team">Team</Label>
       <FloatingSelect label="Select a team" name="team" id="team">
@@ -59,7 +67,7 @@
         {/each}
       </FloatingSelect>
     </div>
-    {/if}
+  {/if}
 
   <div class="mt-6">
     <Label htmlFor="team">Type</Label>
@@ -114,8 +122,8 @@
 
   <div class="mt-6">
     <Label>Attachments</Label>
-    <TextButton htmlFor="attachment">Add attachment</TextButton>
-    <FileInput />
+    <p>Add attachment</p>
+    <FileInput name="attachment" id="attachment" />
   </div>
 
   <div class="mt-6 border p-2">
@@ -127,6 +135,7 @@
           id={priority.name}
           bind:group={priorityType}
           value={priority.name}
+          name="priority"
         />
         <div class="ml-2">
           <Label class="font-bold">{priority.name}</Label>

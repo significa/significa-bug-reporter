@@ -2,7 +2,7 @@
   import { Button, Input } from '@significa/svelte-ui';
   import Name from './name.svelte';
   import { bug } from '$lib/store';
-  let user: string | undefined = undefined;
+  let user: string | null = null;
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
 
@@ -11,13 +11,13 @@
       const [key, value] = field;
       data[key] = value;
     }
-    bug.setUser(JSON.stringify(data.name))
+    bug.setUser(data.name);
   }
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser) {
-    let storage = localStorage.getItem('bug-reporter')
-    if(storage) {
-      user = JSON.parse(storage).user 
+    let storage = localStorage.getItem('bug-reporter');
+    if (storage) {
+      user = JSON.parse(storage).user;
     }
   }
 </script>

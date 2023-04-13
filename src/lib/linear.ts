@@ -29,111 +29,111 @@ export const getTeams = async (): Promise<
   }
 };
 
-// const isImage = (url: string) => {
-//   return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url)
-// }
+const isImage = (url: string) => {
+  return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url);
+};
 
-// const isVideo = (url: string) => {
-//   return /\.(mov|avi|wmv|flv|3gp|mp4|mpg)$/i.test(url)
-// }
+const isVideo = (url: string) => {
+  return /\.(mov|avi|wmv|flv|3gp|mp4|mpg)$/i.test(url);
+};
 
-// const getAttachments = (attachments: string[]): string => {
-//   if (attachments.length === 0) return ''
+const getAttachments = (attachments: string[]): string => {
+  if (attachments.length === 0) return '';
 
-//   return (
-//     '## Attachments\n' +
-//     '___ \n' +
-//     attachments
-//       .sort((a) => {
-//         if (isImage(a)) return 2
+  return (
+    '## Attachments\n' +
+    '___ \n' +
+    attachments
+      .sort((a) => {
+        if (isImage(a)) return 2;
 
-//         if (isVideo(a)) return 1
+        if (isVideo(a)) return 1;
 
-//         return -1
-//       })
-//       .map((attach) => {
-//         if (isImage(attach)) {
-//           return `![${attach}](${encodeURI(attach)})  \n`
-//         }
+        return -1;
+      })
+      .map((attach) => {
+        if (isImage(attach)) {
+          return `![${attach}](${encodeURI(attach)})  \n`;
+        }
 
-//         if (isVideo(attach)) {
-//           return `- 🍿 Video: [${attach}](${encodeURI(attach)})  \n`
-//         }
+        if (isVideo(attach)) {
+          return `- 🍿 Video: [${attach}](${encodeURI(attach)})  \n`;
+        }
 
-//         return `- 📎 File: [${attach}](${encodeURI(attach)})  \n`
-//       })
-//       .join('') +
-//     '&nbsp;  \n' +
-//     '&nbsp;  \n' +
-//     '&nbsp;  \n'
-//   )
-// }
+        return `- 📎 File: [${attach}](${encodeURI(attach)})  \n`;
+      })
+      .join('') +
+    '&nbsp;  \n' +
+    '&nbsp;  \n' +
+    '&nbsp;  \n'
+  );
+};
 
-// type Args =
-//   | {
-//       type: 'bug'
-//       author: string
-//       team: string
-//       title: string
-//       description: string
-//       steps: string
-//       technical: string
-//       priority: string
-//       attachments: string[]
-//     }
-//   | {
-//       type: 'request'
-//       author: string
-//       team: string
-//       title: string
-//       description: string
-//       priority: string
-//       attachments: string[]
-//     }
+// refactor this to match the names on all the inputs
+type Args =
+  | {
+      type: 'bug';
+      author: string;
+      teamId: string;
+      title: string;
+      description: string;
+      steps: string;
+      technical: string;
+      priority: string;
+      attachments: string[];
+    }
+  | {
+      type: 'request';
+      author: string;
+      teamId: string;
+      title: string;
+      description: string;
+      priority: string;
+      attachments: string[];
+    };
 
-// export const createIssue = async (args: Args): Promise<void> => {
-//   const { type, author, team, title, description, priority, attachments } = args
+export const createIssue = async (args: Args): Promise<void> => {
+  const { type, author, teamId, title, description, priority, attachments } =
+    args;
 
-//   const teamId = Buffer.from(team, 'base64').toString('utf-8')
+  const priorityLabel: Record<string, string> = {
+    low: '🟢  **Low**',
+    medium: '🟡  **Medium**',
+    high: '🟠  **High**',
+    critical: '🔴  **Critical**'
+  };
 
-//   const priorityLabel: Record<string, string> = {
-//     low: '🟢  **Low**',
-//     medium: '🟡  **Medium**',
-//     high: '🟠  **High**',
-//     critical: '🔴  **Critical**',
-//   }
+  let payload = `## Description\n___ \n${description}`;
 
-//   let payload = `## Description\n___ \n${description}`
+  if (type === 'bug') {
+    const { steps, technical } = args;
 
-//   if (type === 'bug') {
-//     const { steps, technical } = args
+    payload +=
+      '&nbsp;  \n' +
+      '&nbsp;  \n' +
+      '## Steps to reproduce\n' +
+      '___ \n' +
+      steps +
+      '&nbsp;  \n' +
+      '&nbsp;  \n' +
+      '## Technical Information\n' +
+      '___ \n' +
+      technical;
+  }
 
-//     payload +=
-//       '&nbsp;  \n' +
-//       '&nbsp;  \n' +
-//       '## Steps to reproduce\n' +
-//       '___ \n' +
-//       steps +
-//       '&nbsp;  \n' +
-//       '&nbsp;  \n' +
-//       '## Technical Information\n' +
-//       '___ \n' +
-//       technical
-//   }
+  payload +=
+    '&nbsp;  \n' +
+    '&nbsp;  \n' +
+    getAttachments(attachments) +
+    `${priorityLabel[priority]} priority ${type} reported by ${author}`;
 
-//   payload +=
-//     '&nbsp;  \n' +
-//     '&nbsp;  \n' +
-//     getAttachments(attachments) +
-//     `${priorityLabel[priority]} priority ${type} reported by ${author}`
+  const { success } = await linearClient.createIssue({
+    teamId,
+    title: `[${type}] ${title}`,
+    description: payload
+  });
 
-//   const { success } = await linearClient.issueCreate({
-//     teamId,
-//     title: `[${type}] ${title}`,
-//     description: payload,
-//   })
-
-//   if (!success) {
-//     throw new Error("Couldn't create issue")
-//   }
-// }
+  if (!success) {
+    throw new Error("Couldn't create issue");
+  }
+};
