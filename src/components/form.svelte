@@ -9,11 +9,16 @@
     TextButton
   } from '@significa/svelte-ui';
 
-  const teams = [
-    { name: 'Active Flow', code: '1' },
-    { name: 'Uphill', code: '2' },
-    { name: 'Coalition', code: '3' }
-  ];
+  let teams: {id: string, name: string}[] | null = null;
+  const isBrowser = typeof window !== 'undefined';
+  if (isBrowser) {
+    let storage = localStorage.getItem('bug-reporter')
+    console.log(storage)
+    if(storage) {
+      teams = JSON.parse(storage).team 
+    }
+  }
+
   let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
     {
@@ -43,16 +48,18 @@
 </script>
 
 <form on:submit|preventDefault={onSubmit}>
-  <div class="mt-6">
-    <Label htmlFor="team">Team</Label>
-    <FloatingSelect label="Select a team" name="team" id="team">
-      {#each teams as team}
-        <option value={team.code}>
-          {team.name}
-        </option>
-      {/each}
-    </FloatingSelect>
-  </div>
+    {#if teams}        
+    <div class="mt-6">
+      <Label htmlFor="team">Team</Label>
+      <FloatingSelect label="Select a team" name="team" id="team">
+        {#each teams as team}
+          <option value={team.id}>
+            {team.name}
+          </option>
+        {/each}
+      </FloatingSelect>
+    </div>
+    {/if}
 
   <div class="mt-6">
     <Label htmlFor="team">Type</Label>

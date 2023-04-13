@@ -11,6 +11,14 @@
       const [key, value] = field;
       data[key] = value;
     }
+    bug.setUser(JSON.stringify(data.name))
+  }
+  const isBrowser = typeof window !== 'undefined';
+  if (isBrowser) {
+    let storage = localStorage.getItem('bug-reporter')
+    if(storage) {
+      user = JSON.parse(storage).user 
+    }
   }
 </script>
 
