@@ -40,7 +40,6 @@
   let error = false;
 
   function onSubmit(e: any) {}
-
 </script>
 
 <form on:submit|preventDefault={onSubmit}>
