@@ -9,6 +9,7 @@
     Label,
     FileInput
   } from '@significa/svelte-ui';
+  import { enhance, type SubmitFunction } from '$app/forms';
 
   let teams = $bugStore.teams;
 
@@ -34,22 +35,17 @@
       description: 'The product can not function with this bug.'
     }
   ];
-  let bug = true;
+
+  $: selectedType = 'bug';
   let error = false;
 
-  //TODO Connect this function with linear client create issue
-  function onSubmit(e: any) {
-    const formData = new FormData(e.target);
-
-    const data: any = {};
-    for (let field of formData) {
-      const [key, value] = field;
-      data[key] = value;
-    }
-  }
+  // To prevent the page to update
+  const onSubmit: SubmitFunction = (input) => {
+    console.log(input);
+  };
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form action="?/submitReport" method="POST" use:enhance={onSubmit}>
   {#if teams}
     <div class="mt-6">
       <Label htmlFor="team">Team</Label>
@@ -64,8 +60,13 @@
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="team">Type</Label>
-    <FloatingSelect label="Type" name="type" id="type">
+    <Label htmlFor="type">Type</Label>
+    <FloatingSelect
+      label="Type"
+      name="type"
+      id="type"
+      bind:value={selectedType}
+    >
       <option value="bug">Bug</option>
       <option value="request">Request</option>
     </FloatingSelect>
@@ -88,7 +89,7 @@
     />
   </div>
 
-  {#if bug}
+  {#if selectedType == 'bug'}
     <div class="mt-6">
       <Label htmlFor="steps">Steps to reproduce</Label>
       <p>Detailed instructions on how to reproduce this issue</p>
