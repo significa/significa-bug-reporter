@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { bugStore } from '$lib/store';
+
   import {
     Button,
     Input,
@@ -9,17 +11,7 @@
   } from '@significa/svelte-ui';
   import { validateForm } from '../utils/validateForm';
 
-  let teams: { id: string; name: string }[] | null = null;
-  let storage: string | null = null;
-
-  const isBrowser = typeof window !== 'undefined';
-  if (isBrowser) {
-    storage = localStorage.getItem('bug-reporter');
-    console.log(storage);
-    if (storage) {
-      teams = JSON.parse(storage).team;
-    }
-  }
+  let teams = $bugStore.teams;
 
   let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [

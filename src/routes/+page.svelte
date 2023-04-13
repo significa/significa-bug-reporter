@@ -2,9 +2,9 @@
   import '$styles/index.css';
   import Start from '$components/start.svelte';
   export let data: any;
-  import { bug } from '$lib/store';
+  import { bugStore } from '$lib/store';
   if (data) {
-    bug.setTeams(data.teams);
+    bugStore.setTeams(data.teams);
   }
 </script>
 
