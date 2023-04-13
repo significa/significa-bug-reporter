@@ -8,7 +8,7 @@ export function validateForm(formData: any) {
   const priority = String(formData.get('priority'));
 
   const isValidBug =
-    // TODO: using new storage update !!storageData.user &&
+    // TODO: Get username from the Store !!user &&
     !!team &&
     !!type &&
     !!title &&
