@@ -6,6 +6,7 @@ export function validateForm(formData: FormData) {
   const steps = String(formData.get('steps'));
   const technical = String(formData.get('technical'));
   const priority = String(formData.get('priority'));
+  const attachments = String(formData.get('attachments'))
 
   const isValidBug =
     // TODO: Get username from the Store !!user &&

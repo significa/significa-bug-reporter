@@ -25,8 +25,5 @@ export const actions: Actions = {
       const [key, value] = field;
       data[key] = value;
     }
-
-    console.log(data);
-    console.log(isValid);
   }
 };
