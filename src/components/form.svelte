@@ -8,15 +8,13 @@
     Radio,
     Label,
     FileUpload,
-
     type FileUploadItem
-
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
 
   let teams = $bugStore.teams;
 
-  let files: FileUploadItem[] = []
+  let files: FileUploadItem[] = [];
   let attachments = '';
   $: if (files.length > 0) {
     attachments = files
