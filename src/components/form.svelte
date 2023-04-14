@@ -13,6 +13,9 @@
 
   let teams = $bugStore.teams;
 
+  let files;
+  let attachments;
+
   let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
     {
@@ -118,7 +121,22 @@
   <div class="mt-6">
     <Label>Attachments</Label>
     <p>Add attachment</p>
-    <FileInput name="attachment" id="attachment" />
+    <FileInput
+      multiple
+      type="file"
+      bind:files
+      getSignedUrl={async (file) => {
+        const res = await fetch(
+          `/get-signed-url?${new URLSearchParams({
+            name: file.name,
+            type: file.type,
+            size: file.size.toString()
+          }).toString()}`
+        );
+        return res.text();
+      }}
+    />
+    <input type="hidden" name="attachments" bind:value={attachments} />
   </div>
 
   <div class="mt-6 border p-2">
