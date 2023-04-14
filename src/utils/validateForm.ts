@@ -1,4 +1,5 @@
 export function validateForm(formData: FormData) {
+  const author = String(formData.get('author'));
   const team = String(formData.get('team'));
   const type = String(formData.get('type'));
   const title = String(formData.get('title'));
@@ -6,10 +7,9 @@ export function validateForm(formData: FormData) {
   const steps = String(formData.get('steps'));
   const technical = String(formData.get('technical'));
   const priority = String(formData.get('priority'));
-  const attachments = String(formData.get('attachments'));
 
   const isValidBug =
-    // TODO: Get username from the Store !!user &&
+    !!author &&
     !!team &&
     !!type &&
     !!title &&
@@ -17,12 +17,8 @@ export function validateForm(formData: FormData) {
     !!steps &&
     !!technical &&
     !!priority;
-  // TODO: !uploadingAttachs;
 
-  const isValidRequest =
-    // TODO: using new storage update!!storageData.user &&
-    !!team && !!title && !!description;
-  // TODO: !uploadingAttachs;
+  const isValidRequest = !!author && !!team && !!title && !!description;
 
   return type == 'bug' ? isValidBug : isValidRequest;
 }

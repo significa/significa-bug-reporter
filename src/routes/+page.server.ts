@@ -1,4 +1,4 @@
-import { getTeams } from '$lib/linear';
+import { createIssue, getTeams } from '$lib/linear';
 import { fail, type Actions } from '@sveltejs/kit';
 import { validateForm } from '../utils/validateForm';
 
@@ -24,6 +24,12 @@ export const actions: Actions = {
     for (const field of formData) {
       const [key, value] = field;
       data[key] = value;
+    }
+
+    try {
+      await createIssue(data);
+    } catch (err) {
+      console.error('Something went wrong', err);
     }
   }
 };

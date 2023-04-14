@@ -13,6 +13,7 @@
   import { enhance, type SubmitFunction } from '$app/forms';
 
   let teams = $bugStore.teams;
+  let author = $bugStore.userName;
 
   let files: FileUploadItem[] = [];
   let attachments = '';
@@ -20,7 +21,7 @@
     attachments = files
       .filter((f) => f.status === 'success')
       .map((f) => f.url)
-      .join(',');
+      .join(', ');
   } else {
     attachments = '';
   }
@@ -28,22 +29,22 @@
   let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
     {
-      name: 'Low',
+      name: 'low',
       description:
         'A non-urgent bug, this bug does not affect core functionality of the product'
     },
     {
-      name: 'Medium',
+      name: 'medium',
       description:
         'This bug affects functionality but on a non-core user journey.'
     },
     {
-      name: 'High',
+      name: 'high',
       description:
         'This bug is causing core-functionality problems but not breaking the product.'
     },
     {
-      name: 'Critical',
+      name: 'critical',
       description: 'The product can not function with this bug.'
     }
   ];
@@ -58,10 +59,11 @@
 </script>
 
 <form action="?/submitReport" method="POST" use:enhance={onSubmit}>
+  <input type="hidden" name="author" bind:value={author} />
   {#if teams}
     <div class="mt-6">
       <Label htmlFor="team" required>Team</Label>
-      <FloatingSelect label="Select a team" name="team" id="team">
+      <FloatingSelect label="Select a team" name="teamId" id="team">
         {#each teams as team}
           <option value={team.id}>
             {team.name}
@@ -160,7 +162,7 @@
           name="priority"
         />
         <div class="ml-2">
-          <Label class="font-bold">{priority.name}</Label>
+          <Label class="font-bold">{priority.name.toUpperCase()}</Label>
           <p>{priority.description}</p>
         </div>
       </div>

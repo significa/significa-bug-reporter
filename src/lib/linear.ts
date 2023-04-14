@@ -29,47 +29,6 @@ export const getTeams = async (): Promise<
   }
 };
 
-const isImage = (url: string) => {
-  return /\.(gif|jpe?g|tiff?|png|webp|bmp)$/i.test(url);
-};
-
-const isVideo = (url: string) => {
-  return /\.(mov|avi|wmv|flv|3gp|mp4|mpg)$/i.test(url);
-};
-
-const getAttachments = (attachments: string[]): string => {
-  if (attachments.length === 0) return '';
-
-  return (
-    '## Attachments\n' +
-    '___ \n' +
-    attachments
-      .sort((a) => {
-        if (isImage(a)) return 2;
-
-        if (isVideo(a)) return 1;
-
-        return -1;
-      })
-      .map((attach) => {
-        if (isImage(attach)) {
-          return `![${attach}](${encodeURI(attach)})  \n`;
-        }
-
-        if (isVideo(attach)) {
-          return `- 🍿 Video: [${attach}](${encodeURI(attach)})  \n`;
-        }
-
-        return `- 📎 File: [${attach}](${encodeURI(attach)})  \n`;
-      })
-      .join('') +
-    '&nbsp;  \n' +
-    '&nbsp;  \n' +
-    '&nbsp;  \n'
-  );
-};
-
-// refactor this to match the names on all the inputs
 type Args =
   | {
       type: 'bug';
@@ -124,7 +83,8 @@ export const createIssue = async (args: Args): Promise<void> => {
   payload +=
     '&nbsp;  \n' +
     '&nbsp;  \n' +
-    getAttachments(attachments) +
+    attachments +
+    '&nbsp;  \n' +
     `${priorityLabel[priority]} priority ${type} reported by ${author}`;
 
   const { success } = await linearClient.createIssue({
