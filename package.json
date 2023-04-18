@@ -37,6 +37,8 @@
   },
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.312.0",
+    "@aws-sdk/s3-request-presigner": "^3.312.0",
     "@linear/sdk": "^2.6.0",
     "dotenv": "^16.0.3"
   }
