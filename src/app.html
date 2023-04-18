@@ -8,7 +8,9 @@
       function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
-        window.dispatchEvent(new CustomEvent('theme-change', { detail: theme }));
+        window.dispatchEvent(
+          new CustomEvent('theme-change', { detail: theme })
+        );
       }
 
       (() => {
@@ -16,7 +18,9 @@
         const q = window.matchMedia('(prefers-color-scheme: dark)');
 
         setTheme(s ? s : q.matches ? 'dark' : 'light');
-        q.addEventListener('change', (event) => setTheme(event.matches ? 'dark' : 'light'));
+        q.addEventListener('change', (event) =>
+          setTheme(event.matches ? 'dark' : 'light')
+        );
       })();
     </script>
     %sveltekit.head%
