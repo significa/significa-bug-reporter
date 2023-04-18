@@ -1,7 +1,7 @@
 <script lang="ts">
   import { TextButton } from '@significa/svelte-ui';
   import Form from './form.svelte';
-  import { bugStore } from '$lib/store';
+  import { bugStore } from '$lib/stores/store';
 </script>
 
 <div class="pb-8">

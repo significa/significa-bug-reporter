@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { bugStore } from '$lib/store';
+  import { bugStore } from '$lib/stores/store';
   import { page } from '$app/stores';
 
   import {
@@ -12,9 +12,8 @@
     type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
-  import { linearTeams } from '$lib/linearTeams';
+  import { linearTeams } from '$lib/stores/linearTeams';
 
-  let teams = $bugStore.teams;
   let author = $bugStore.userName;
 
   let files: FileUploadItem[] = [];
@@ -79,12 +78,15 @@
     //console.log(input);
   };
 
-  $: console.log($linearTeams);
-
   let key = '';
 </script>
 
-<form action="?/submitReport" method="POST" use:enhance={onSubmit}>
+<form
+  action="?/submitReport"
+  method="POST"
+  use:enhance={onSubmit}
+  on:keydown={(event) => event.key != 'Enter'}
+>
   <input type="hidden" name="author" bind:value={author} />
   {#if !!$linearTeams.length}
     <div class="mt-6">

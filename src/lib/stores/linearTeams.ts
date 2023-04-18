@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
-import type { Team } from './linear';
+import type { Team } from '../linear';
+import { toast } from '@significa/svelte-ui';
 
 const getDefaultTeams = () => {
   if (browser) {
@@ -24,11 +25,19 @@ const createTheme = () => {
     subscribe,
     fetch: async (code: string) => {
       const res = await fetch(`/api/teams?key=${code}`);
-      // verify if res returns error 404 or is ok 200
       const data = await res.json();
-      console.log('data', data);
+
+      if (res.status === 500) {
+        toast.error({
+          message: data.message,
+          description:
+            'Please verify if the code that you are inserting is the correct one and try again.',
+          timeout: 0
+        });
+        return null;
+      }
+
       update((value) => [...value, data]);
-      console.log(res);
     }
   };
 };

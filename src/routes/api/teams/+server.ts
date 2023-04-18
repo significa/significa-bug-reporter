@@ -15,7 +15,6 @@ export const GET: RequestHandler = async ({ url }) => {
 
     return new Response(JSON.stringify(filteredTeam));
   } catch (err) {
-    console.error('Could not find team', err);
     throw error(500, 'Could not find team');
   }
 };
