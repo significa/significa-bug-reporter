@@ -4,10 +4,10 @@
   import {
     Button,
     Input,
-    FloatingSelect,
     Radio,
     Label,
-    FileInput
+    FileInput,
+    Select
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
 
@@ -48,38 +48,37 @@
 <form action="?/submitReport" method="POST" use:enhance={onSubmit}>
   {#if teams}
     <div class="mt-6">
-      <Label htmlFor="team">Team</Label>
-      <FloatingSelect label="Select a team" name="team" id="team">
+      <Label htmlFor="team" class="font-medium text-base">Team</Label>
+      <Select label="Select a team" name="team" id="team">
         {#each teams as team}
           <option value={team.id}>
             {team.name}
           </option>
         {/each}
-      </FloatingSelect>
+      </Select>
     </div>
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="type">Type</Label>
-    <FloatingSelect
-      label="Type"
-      name="type"
-      id="type"
-      bind:value={selectedType}
-    >
+    <Label htmlFor="type" class="font-medium text-base">Type</Label>
+    <Select label="Type" name="type" id="type" bind:value={selectedType}>
       <option value="bug">Bug</option>
       <option value="request">Request</option>
-    </FloatingSelect>
+    </Select>
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="title">Title</Label>
+    <Label htmlFor="title" class="font-medium text-base">Title</Label>
     <Input name="title" id="title" placeholder="Title" value="" />
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="description">Description</Label>
-    <p>Try to be as descriptive as possible.</p>
+    <Label htmlFor="description" class="text-foreground text-base font-medium"
+      >Description</Label
+    >
+    <p class="text-sm/none text-foreground-secondary mb-2">
+      Try to be as descriptive as possible.
+    </p>
     <Input
       as="textarea"
       name="description"
@@ -91,8 +90,12 @@
 
   {#if selectedType == 'bug'}
     <div class="mt-6">
-      <Label htmlFor="steps">Steps to reproduce</Label>
-      <p>Detailed instructions on how to reproduce this issue</p>
+      <Label htmlFor="steps" class="text-foreground text-base font-medium"
+        >Steps to reproduce</Label
+      >
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Detailed instructions on how to reproduce this issue
+      </p>
       <Input
         as="textarea"
         name="steps"
@@ -103,8 +106,12 @@
     </div>
 
     <div class="mt-6">
-      <Label htmlFor="technical">Technical Information</Label>
-      <p>Your Operating System, Browser, Device, etc.</p>
+      <Label htmlFor="technical" class="text-foreground text-base font-medium"
+        >Technical Information</Label
+      >
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Your Operating System, Browser, Device, etc.
+      </p>
       <Input
         as="textarea"
         name="technical"
@@ -116,12 +123,14 @@
   {/if}
 
   <div class="mt-6">
-    <Label>Attachments</Label>
-    <p>Add attachment</p>
+    <Label for="attachements" class="text-foreground text-base font-medium"
+      >Attachments</Label
+    >
+    <p class="text-sm/none text-foreground-secondary mb-2">Add attachment</p>
     <FileInput name="attachment" id="attachment" />
   </div>
 
-  <div class="mt-6 border p-2">
+  <div class="mt-6 border p-4 rounded-md">
     <Label htmlFor="priority">Priority</Label>
 
     {#each priorities as priority}
@@ -133,8 +142,10 @@
           name="priority"
         />
         <div class="ml-2">
-          <Label class="font-bold">{priority.name}</Label>
-          <p>{priority.description}</p>
+          <Label for={priority.name} class="font-bold"
+            >{priority.name}
+            <p class="font-normal text-sm">{priority.description}</p>
+          </Label>
         </div>
       </div>
     {/each}

@@ -4,8 +4,8 @@
   import { bugStore } from '$lib/store';
 </script>
 
-<div>
-  <div class="p-4" style="background: #FFD324">
+<div class="pb-8">
+  <div class="p-4" data-theme="yellow">
     <h2>Reporting as {$bugStore.userName}</h2>
     <TextButton on:click={() => bugStore.setUser(null)}>Log out</TextButton>
   </div>
