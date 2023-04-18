@@ -2,6 +2,8 @@ name: CI/CD
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   release:
     types:
@@ -14,6 +16,7 @@ jobs:
     permissions:
       contents: read
       packages: read
+      deployments: write
     uses: significa/actions/.github/workflows/vercel-app.yaml@main
     with:
       test_command: null
