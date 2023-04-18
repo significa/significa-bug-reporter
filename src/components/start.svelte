@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { Button, Input } from '@significa/svelte-ui';
+  import { Button, Input, ThemeSwitch } from '@significa/svelte-ui';
   import Name from './name.svelte';
   import { bugStore } from '$lib/store';
   import bugIcon from './ui/icons/bug.svg?raw';
-  import Switch from './ui/switch.svelte';
+  import { theme } from '$lib/theme';
 
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
@@ -26,7 +26,7 @@
       <p class="font-bold text-xl ml-2">Significa Bug Reporter</p>
     </span>
     <div class="flex">
-      <Switch />
+      <ThemeSwitch theme={$theme} on:toggle={theme.toogle} />
     </div>
   </div>
 
