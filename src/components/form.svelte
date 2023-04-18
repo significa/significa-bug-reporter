@@ -52,13 +52,11 @@
   const prioritiesRequest = [
     {
       name: 'low',
-      description:
-        'A non-urgent request, to be tackled whenever theres time.'
+      description: 'A non-urgent request, to be tackled whenever theres time.'
     },
     {
       name: 'medium',
-      description:
-        'This request is important but on a non-core user journey.'
+      description: 'This request is important but on a non-core user journey.'
     },
     {
       name: 'high',
@@ -189,38 +187,38 @@
   <div class="mt-6 border p-2">
     <Label htmlFor="priority" required>Priority</Label>
     {#if selectedType == 'bug'}
-    {#each priorities as priority}
-      <div class="flex row items-center mt-3">
-        <Radio
-          error={!!$page.form?.error?.fields?.priority}
-          id={priority.name}
-          bind:group={priorityType}
-          value={priority.name}
-          name="priority"
-        />
-        <div class="ml-2">
-          <Label class="font-bold">{priority.name.toUpperCase()}</Label>
-          <p>{priority.description}</p>
+      {#each priorities as priority}
+        <div class="flex row items-center mt-3">
+          <Radio
+            error={!!$page.form?.error?.fields?.priority}
+            id={priority.name}
+            bind:group={priorityType}
+            value={priority.name}
+            name="priority"
+          />
+          <div class="ml-2">
+            <Label class="font-bold">{priority.name.toUpperCase()}</Label>
+            <p>{priority.description}</p>
+          </div>
         </div>
-      </div>
-    {/each}
+      {/each}
     {/if}
     {#if selectedType == 'request'}
-    {#each prioritiesRequest as priority}
-      <div class="flex row items-center mt-3">
-        <Radio
-          error={!!$page.form?.error?.fields?.priority}
-          id={priority.name}
-          bind:group={priorityType}
-          value={priority.name}
-          name="priority"
-        />
-        <div class="ml-2">
-          <Label class="font-bold">{priority.name.toUpperCase()}</Label>
-          <p>{priority.description}</p>
+      {#each prioritiesRequest as priority}
+        <div class="flex row items-center mt-3">
+          <Radio
+            error={!!$page.form?.error?.fields?.priority}
+            id={priority.name}
+            bind:group={priorityType}
+            value={priority.name}
+            name="priority"
+          />
+          <div class="ml-2">
+            <Label class="font-bold">{priority.name.toUpperCase()}</Label>
+            <p>{priority.description}</p>
+          </div>
         </div>
-      </div>
-    {/each}
+      {/each}
     {/if}
   </div>
 

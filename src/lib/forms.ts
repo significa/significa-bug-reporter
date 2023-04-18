@@ -1,16 +1,15 @@
 import { fail, type RequestEvent } from '@sveltejs/kit';
-export type Args =
-  | {
-      type: 'bug';
-      author: string;
-      teamId: string;
-      title: string;
-      description: string;
-      steps: string;
-      technical: string;
-      priority: string;
-      attachments: string[];
-    }
+export type Args = {
+  type: 'bug';
+  author: string;
+  teamId: string;
+  title: string;
+  description: string;
+  steps: string;
+  technical: string;
+  priority: string;
+  attachments: string[];
+};
 
 export const handleContactForm =
   (handleSaveToDatabase: (args: Args) => Promise<void>) =>
