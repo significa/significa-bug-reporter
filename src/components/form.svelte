@@ -7,11 +7,23 @@
     FloatingSelect,
     Radio,
     Label,
-    FileInput
+    FileUpload,
+    type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
 
   let teams = $bugStore.teams;
+
+  let files: FileUploadItem[] = [];
+  let attachments = '';
+  $: if (files.length > 0) {
+    attachments = files
+      .filter((f) => f.status === 'success')
+      .map((f) => f.url)
+      .join(',');
+  } else {
+    attachments = '';
+  }
 
   let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
@@ -118,7 +130,22 @@
   <div class="mt-6">
     <Label>Attachments</Label>
     <p>Add attachment</p>
-    <FileInput name="attachment" id="attachment" />
+    <FileUpload
+      multiple
+      name="files"
+      bind:files
+      getSignedUrl={async (file) => {
+        const res = await fetch(
+          `/get-signed-url?${new URLSearchParams({
+            name: file.name,
+            type: file.type,
+            size: file.size.toString()
+          }).toString()}`
+        );
+        return res.text();
+      }}
+    />
+    <input type="hidden" name="attachments" bind:value={attachments} />
   </div>
 
   <div class="mt-6 border p-2">
