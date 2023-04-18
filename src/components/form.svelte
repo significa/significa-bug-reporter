@@ -7,12 +7,12 @@
     Input,
     Radio,
     Label,
-    FileInput,
     Select,
     FileUpload,
     type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
+  import { linearTeams } from '$lib/linearTeams';
 
   let teams = $bugStore.teams;
   let author = $bugStore.userName;
@@ -72,15 +72,21 @@
 
   $: selectedType = 'bug';
 
+  let showTeamInput = false;
+
   // To prevent the page to update
   const onSubmit: SubmitFunction = (input) => {
     //console.log(input);
   };
+
+  $: console.log($linearTeams);
+
+  let key = '';
 </script>
 
 <form action="?/submitReport" method="POST" use:enhance={onSubmit}>
   <input type="hidden" name="author" bind:value={author} />
-  {#if teams}
+  {#if !!$linearTeams.length}
     <div class="mt-6">
       <Label htmlFor="team" class="font-medium text-base">Team</Label>
       <Select
@@ -89,13 +95,44 @@
         id="team"
         error={!!$page.form?.error?.fields?.teamId}
       >
-        {#each teams as team}
+        {#each $linearTeams as team}
           <option value={team.id}>
             {team.name}
           </option>
         {/each}
       </Select>
     </div>
+  {/if}
+
+  {#if showTeamInput}
+    <div class="mt-6">
+      <Label htmlFor="technical" class="font-medium text-base">Add team</Label>
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Please provide the code of the team.
+      </p>
+      <Input
+        as="input"
+        name="addTeam"
+        id="addTeam"
+        placeholder="Add code of the team"
+        bind:value={key}
+      />
+      <Button
+        type="button"
+        variant="secondary"
+        class="mt-3"
+        disabled={!key}
+        on:click={() => linearTeams.fetch(key)}>Add</Button
+      >
+    </div>
+  {/if}
+
+  {#if !showTeamInput}
+    <Button
+      variant="secondary"
+      class="mt-6"
+      on:click={() => (showTeamInput = true)}>Add team</Button
+    >
   {/if}
 
   <div class="mt-6">

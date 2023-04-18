@@ -6,14 +6,13 @@ export const linearClient = new LinearClient({
   accessToken: process.env.LINEAR_OAUTH_ACCESS_TOKEN
 });
 
-export const getTeams = async (): Promise<
-  | {
-      name: string;
-      id: string;
-      key: string;
-    }[]
-  | null
-> => {
+export type Team = {
+  name: string;
+  id: string;
+  key: string;
+};
+
+export const getTeams = async (): Promise<Team[] | null> => {
   try {
     const { nodes } = await linearClient.teams();
 
