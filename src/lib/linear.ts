@@ -10,6 +10,7 @@ export const getTeams = async (): Promise<
   | {
       name: string;
       id: string;
+      key: string;
     }[]
   | null
 > => {
@@ -20,7 +21,8 @@ export const getTeams = async (): Promise<
     const teams = nodes.map((node) => {
       return {
         name: node.name,
-        id: node.id
+        id: node.id,
+        key: node.key
       };
     });
     return teams;
