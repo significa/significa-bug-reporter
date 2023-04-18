@@ -11,10 +11,14 @@ const isTheme = (theme: string): theme is Theme => {
 
 const getFromLocalStorage = (): Theme => {
   if (browser) {
-    const theme = window.localStorage.getItem('theme');
+    const q = window.matchMedia('(prefers-color-scheme: dark)');
+    const localStoreTheme = window.localStorage.getItem('theme');
 
-    if (theme && isTheme(theme)) {
-      return theme;
+    if (localStoreTheme && isTheme(localStoreTheme)) {
+      return localStoreTheme;
+    }
+    if (q.matches) {
+      return 'dark';
     }
   }
   return 'light';
