@@ -124,7 +124,11 @@
         variant="secondary"
         class="mt-3"
         disabled={!key}
-        on:click={() => linearTeams.fetch(key)}>Add</Button
+        on:click={() => {
+          linearTeams.fetch(key);
+          showTeamInput = false;
+          key = '';
+        }}>Add</Button
       >
     </div>
   {/if}
