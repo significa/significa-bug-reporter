@@ -6,9 +6,10 @@
   import {
     Button,
     Input,
-    FloatingSelect,
     Radio,
     Label,
+    FileInput,
+    Select,
     FileUpload,
     type FileUploadItem,
     toast
@@ -121,8 +122,8 @@
   <input type="hidden" name="author" bind:value={author} />
   {#if teams}
     <div class="mt-6">
-      <Label htmlFor="team" required>Team</Label>
-      <FloatingSelect
+      <Label htmlFor="team" class="font-medium text-base">Team</Label>
+      <Select
         label="Select a team"
         name="teamId"
         id="team"
@@ -133,26 +134,26 @@
             {team.name}
           </option>
         {/each}
-      </FloatingSelect>
+      </Select>
     </div>
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="type" required>Type</Label>
-    <FloatingSelect
-      error={!!$page.form?.error?.fields?.type}
+    <Label htmlFor="type" class="font-medium text-base">Type</Label>
+    <Select
       label="Type"
       name="type"
       id="type"
       bind:value={selectedType}
+      error={!!$page.form?.error?.fields?.type}
     >
       <option value="bug">Bug</option>
       <option value="request">Request</option>
-    </FloatingSelect>
+    </Select>
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="title" required>Title</Label>
+    <Label htmlFor="title" class="font-medium text-base">Title</Label>
     <Input
       name="title"
       id="title"
@@ -163,8 +164,12 @@
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="description" required>Description</Label>
-    <p>Try to be as descriptive as possible.</p>
+    <Label htmlFor="description" class="text-foreground text-base font-medium"
+      >Description</Label
+    >
+    <p class="text-sm/none text-foreground-secondary mb-2">
+      Try to be as descriptive as possible.
+    </p>
     <Input
       error={!!$page.form?.error?.fields?.description}
       as="textarea"
@@ -177,8 +182,12 @@
 
   {#if selectedType == 'bug'}
     <div class="mt-6">
-      <Label htmlFor="steps" required>Steps to reproduce</Label>
-      <p>Detailed instructions on how to reproduce this issue</p>
+      <Label htmlFor="steps" class="text-foreground text-base font-medium"
+        >Steps to reproduce</Label
+      >
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Detailed instructions on how to reproduce this issue
+      </p>
       <Input
         error={!!$page.form?.error?.fields?.steps}
         as="textarea"
@@ -190,8 +199,12 @@
     </div>
 
     <div class="mt-6">
-      <Label htmlFor="technical" required>Technical Information</Label>
-      <p>Your Operating System, Browser, Device, etc.</p>
+      <Label htmlFor="technical" class="text-foreground text-base font-medium"
+        >Technical Information</Label
+      >
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Your Operating System, Browser, Device, etc.
+      </p>
       <Input
         error={!!$page.form?.error?.fields?.technical}
         as="textarea"
@@ -204,8 +217,10 @@
   {/if}
 
   <div class="mt-6">
-    <Label>Attachments</Label>
-    <p>Add attachment</p>
+    <Label for="attachements" class="text-foreground text-base font-medium"
+      >Attachments</Label
+    >
+    <p class="text-sm/none text-foreground-secondary mb-2">Add attachment</p>
     <FileUpload
       multiple
       name="files"
@@ -237,8 +252,10 @@
             name="priority"
           />
           <div class="ml-2">
-            <Label class="font-bold">{priority.name.toUpperCase()}</Label>
-            <p>{priority.description}</p>
+            <Label for={priority.name} class="font-bold"
+              >{priority.name}
+              <p class="font-normal text-sm">{priority.description}</p>
+            </Label>
           </div>
         </div>
       {/each}
@@ -254,8 +271,10 @@
             name="priority"
           />
           <div class="ml-2">
-            <Label class="font-bold">{priority.name.toUpperCase()}</Label>
-            <p>{priority.description}</p>
+            <Label for={priority.name} class="font-bold"
+              >{priority.name}
+              <p class="font-normal text-sm">{priority.description}</p>
+            </Label>
           </div>
         </div>
       {/each}
