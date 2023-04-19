@@ -60,7 +60,15 @@ const createTheme = () => {
         throw new Error();
       }
     },
-    clearStore: () => update(() => [])
+    clearStore: () => update(() => []),
+    updateSore: (team: Team) =>
+      update((prev) => {
+        const exists = prev.find((val) => val.id === team.id);
+        if (exists) {
+          return [...prev];
+        }
+        return [...prev, team];
+      })
   };
 };
 
