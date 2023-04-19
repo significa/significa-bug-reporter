@@ -2,8 +2,6 @@ import { handleContactForm } from '$lib/forms';
 import { linearClient } from '$lib/linear';
 import type { Actions } from '@sveltejs/kit';
 
-import 'dotenv/config';
-
 export const actions: Actions = {
   submitReport: handleContactForm(
     async ({
