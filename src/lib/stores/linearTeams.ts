@@ -4,25 +4,22 @@ import type { Team } from '../linear';
 import { toast } from '@significa/svelte-ui';
 
 const getDefaultTeams = () => {
-  if (browser) {
-    const localStoreTeams = window.localStorage.getItem('linear-teams');
+  try {
+    if (browser) {
+      const localStoreTeams = window.localStorage.getItem('linear-teams');
 
-    if (localStoreTeams) {
-      try {
-        JSON.parse(localStoreTeams);
-      } catch (e) {
-        throw new Error();
-      }
+      if (localStoreTeams) {
+        const parsedTeams = JSON.parse(localStoreTeams);
 
-      const parsedTeams = JSON.parse(localStoreTeams);
-
-      if (Array.isArray(parsedTeams)) {
-        return parsedTeams;
-      } else {
-        throw new Error();
+        if (Array.isArray(parsedTeams)) {
+          return parsedTeams;
+        }
       }
     }
+  } catch (err) {
+    console.error(err);
   }
+  // will return default state
   return [];
 };
 
@@ -32,32 +29,36 @@ const createTheme = () => {
   return {
     subscribe,
     fetch: async (code: string) => {
-      const res = await fetch(`/api/teams?key=${code}`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`/api/teams?key=${code}`);
+        const data = await res.json();
 
-      if (res.status === 200) {
-        update((value) => [...value, data]);
-        toast.success({
-          message: 'Team successfully added.'
-        });
-        return;
-      }
+        if (res.status === 200) {
+          update((value) => [...value, data]);
+          toast.success({
+            message: 'Team successfully added.'
+          });
+          return;
+        }
 
-      if (res.status === 404) {
+        if (res.status === 404) {
+          toast.error({
+            message: data.message,
+            description:
+              'Please verify if the code that you are inserting is the correct one and try again.',
+            timeout: 0
+          });
+          return null;
+        }
+
         toast.error({
-          message: data.message,
-          description:
-            'Please verify if the code that you are inserting is the correct one and try again.',
+          message: 'Server Error',
+          description: 'Something went wrong, please try again.',
           timeout: 0
         });
-        return null;
+      } catch (e) {
+        throw new Error();
       }
-
-      toast.error({
-        message: 'Server Error',
-        description: 'Something went wrong, please try again.',
-        timeout: 0
-      });
     },
     clearStore: () => update(() => [])
   };
