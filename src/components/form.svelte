@@ -1,6 +1,7 @@
 <script lang="ts">
   import { bugStore } from '$lib/store';
   import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
 
   import {
     Button,
@@ -9,9 +10,12 @@
     Radio,
     Label,
     FileUpload,
-    type FileUploadItem
+    type FileUploadItem,
+    toast
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
+  import { createEventDispatcher } from 'svelte';
+  import { browser } from '$app/environment';
 
   let teams = $bugStore.teams;
   let author = $bugStore.userName;
@@ -69,15 +73,51 @@
     }
   ];
 
+  let loading = false;
+
   $: selectedType = 'bug';
 
-  // To prevent the page to update
-  const onSubmit: SubmitFunction = (input) => {
-    //console.log(input);
-  };
+  const dispatch = createEventDispatcher<{
+    success: undefined;
+    error: string;
+  }>();
+
+  $: if ($page.form?.success) {
+    dispatch('success');
+    toast.success({
+      message: 'test',
+      timeout: 8000
+    });
+    goto('/success');
+  }
+  $: if ($page.form?.error) {
+    dispatch('error', $page.form.error.type);
+    if (browser) {
+      if ($page.form?.error?.type === 'notion') {
+        toast.error({
+          message: 'Something went wrong :(',
+          description: 'Please try again!',
+          timeout: 0
+        });
+      }
+    }
+  }
 </script>
 
-<form action="?/submitReport" method="POST" use:enhance={onSubmit}>
+<form
+  action="?/submitReport"
+  method="POST"
+  use:enhance={() => {
+    loading = true;
+
+    return async ({ update }) => {
+      loading = false;
+      files = [];
+
+      await update();
+    };
+  }}
+>
   <input type="hidden" name="author" bind:value={author} />
   {#if teams}
     <div class="mt-6">
@@ -222,5 +262,5 @@
     {/if}
   </div>
 
-  <Button class="mt-6" type="submit">Create ticket</Button>
+  <Button {loading} class="mt-6" type="submit">Create ticket</Button>
 </form>
