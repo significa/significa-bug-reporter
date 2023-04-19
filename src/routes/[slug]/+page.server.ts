@@ -8,7 +8,7 @@ export const load: Load = async ({ params }) => {
       '^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$'
     );
 
-    // old base64 cold
+    // old base64 code
     if (slug && regex.test(slug)) {
       const id = Buffer.from(slug, 'base64').toString('utf-8');
       const { nodes } = await linearClient.teams({
