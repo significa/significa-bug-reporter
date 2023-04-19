@@ -1,17 +1,8 @@
 import { handleContactForm } from '$lib/forms';
-import { getTeams, linearClient } from '$lib/linear';
+import { linearClient } from '$lib/linear';
 import type { Actions } from '@sveltejs/kit';
 
 import 'dotenv/config';
-
-export const load = async () => {
-  try {
-    const teams = await getTeams();
-    return { teams };
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 export const actions: Actions = {
   submitReport: handleContactForm(

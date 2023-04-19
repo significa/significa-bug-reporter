@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { bugStore } from '$lib/store';
+  import { bugStore } from '$lib/stores/store';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
 
@@ -8,7 +8,6 @@
     Input,
     Radio,
     Label,
-    FileInput,
     Select,
     FileUpload,
     type FileUploadItem,
@@ -17,8 +16,8 @@
   import { enhance, type SubmitFunction } from '$app/forms';
   import { createEventDispatcher } from 'svelte';
   import { browser } from '$app/environment';
+  import { linearTeams } from '$lib/stores/linearTeams';
 
-  let teams = $bugStore.teams;
   let author = $bugStore.userName;
 
   let files: FileUploadItem[] = [];
@@ -103,6 +102,8 @@
       }
     }
   }
+  let showTeamInput = false;
+  let key = '';
 </script>
 
 <form
@@ -118,9 +119,10 @@
       await update();
     };
   }}
+  on:keydown={(event) => event.key != 'Enter'}
 >
   <input type="hidden" name="author" bind:value={author} />
-  {#if teams}
+  {#if !!$linearTeams.length}
     <div class="mt-6">
       <Label htmlFor="team" class="font-medium text-base">Team</Label>
       <Select
@@ -129,13 +131,48 @@
         id="team"
         error={!!$page.form?.error?.fields?.teamId}
       >
-        {#each teams as team}
+        {#each $linearTeams as team}
           <option value={team.id}>
             {team.name}
           </option>
         {/each}
       </Select>
     </div>
+  {/if}
+
+  {#if showTeamInput}
+    <div class="mt-6">
+      <Label htmlFor="technical" class="font-medium text-base">Add team</Label>
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Please provide the code of the team.
+      </p>
+      <Input
+        as="input"
+        name="addTeam"
+        id="addTeam"
+        placeholder="Add code of the team"
+        bind:value={key}
+      />
+      <Button
+        type="button"
+        variant="secondary"
+        class="mt-3"
+        disabled={!key}
+        on:click={() => {
+          linearTeams.fetch(key);
+          showTeamInput = false;
+          key = '';
+        }}>Add</Button
+      >
+    </div>
+  {/if}
+
+  {#if !showTeamInput}
+    <Button
+      variant="secondary"
+      class="mt-6"
+      on:click={() => (showTeamInput = true)}>Add team</Button
+    >
   {/if}
 
   <div class="mt-6">
