@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { toast, Toaster, ToastNotification, ThemeSwitch } from '@significa/svelte-ui';
+  import {
+    toast,
+    Toaster,
+    ToastNotification,
+    ThemeSwitch
+  } from '@significa/svelte-ui';
   import { beforeNavigate } from '$app/navigation';
   import bugIcon from '../components/ui/icons/bug.svg?raw';
   import { theme } from '$lib/stores/theme';

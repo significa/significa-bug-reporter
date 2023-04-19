@@ -102,7 +102,7 @@
       }
     }
   }
-  
+
   let showTeamInput = false;
   let key = '';
 </script>
