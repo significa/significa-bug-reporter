@@ -1,5 +1,6 @@
 <script lang="ts">
   import { bugStore } from '$lib/store';
+  import { page } from '$app/stores';
 
   import {
     Button,
@@ -48,13 +49,31 @@
       description: 'The product can not function with this bug.'
     }
   ];
+  const prioritiesRequest = [
+    {
+      name: 'low',
+      description: 'A non-urgent request, to be tackled whenever theres time.'
+    },
+    {
+      name: 'medium',
+      description: 'This request is important but on a non-core user journey.'
+    },
+    {
+      name: 'high',
+      description:
+        'This is a core-functionality request that needs to be tackled as soon as possible.'
+    },
+    {
+      name: 'critical',
+      description: 'The product can not function without this.'
+    }
+  ];
 
   $: selectedType = 'bug';
-  let error = false;
 
   // To prevent the page to update
   const onSubmit: SubmitFunction = (input) => {
-    console.log(input);
+    //console.log(input);
   };
 </script>
 
@@ -63,7 +82,12 @@
   {#if teams}
     <div class="mt-6">
       <Label htmlFor="team" required>Team</Label>
-      <FloatingSelect label="Select a team" name="teamId" id="team">
+      <FloatingSelect
+        label="Select a team"
+        name="teamId"
+        id="team"
+        error={!!$page.form?.error?.fields?.teamId}
+      >
         {#each teams as team}
           <option value={team.id}>
             {team.name}
@@ -76,6 +100,7 @@
   <div class="mt-6">
     <Label htmlFor="type" required>Type</Label>
     <FloatingSelect
+      error={!!$page.form?.error?.fields?.type}
       label="Type"
       name="type"
       id="type"
@@ -88,13 +113,20 @@
 
   <div class="mt-6">
     <Label htmlFor="title" required>Title</Label>
-    <Input name="title" id="title" placeholder="Title" value="" />
+    <Input
+      name="title"
+      id="title"
+      placeholder="Title"
+      value=""
+      error={!!$page.form?.error?.fields?.title}
+    />
   </div>
 
   <div class="mt-6">
     <Label htmlFor="description" required>Description</Label>
     <p>Try to be as descriptive as possible.</p>
     <Input
+      error={!!$page.form?.error?.fields?.description}
       as="textarea"
       name="description"
       id="description"
@@ -108,6 +140,7 @@
       <Label htmlFor="steps" required>Steps to reproduce</Label>
       <p>Detailed instructions on how to reproduce this issue</p>
       <Input
+        error={!!$page.form?.error?.fields?.steps}
         as="textarea"
         name="steps"
         id="steps"
@@ -120,6 +153,7 @@
       <Label htmlFor="technical" required>Technical Information</Label>
       <p>Your Operating System, Browser, Device, etc.</p>
       <Input
+        error={!!$page.form?.error?.fields?.technical}
         as="textarea"
         name="technical"
         id="technical"
@@ -152,26 +186,41 @@
 
   <div class="mt-6 border p-2">
     <Label htmlFor="priority" required>Priority</Label>
-
-    {#each priorities as priority}
-      <div class="flex row items-center mt-3">
-        <Radio
-          id={priority.name}
-          bind:group={priorityType}
-          value={priority.name}
-          name="priority"
-        />
-        <div class="ml-2">
-          <Label class="font-bold">{priority.name.toUpperCase()}</Label>
-          <p>{priority.description}</p>
+    {#if selectedType == 'bug'}
+      {#each priorities as priority}
+        <div class="flex row items-center mt-3">
+          <Radio
+            error={!!$page.form?.error?.fields?.priority}
+            id={priority.name}
+            bind:group={priorityType}
+            value={priority.name}
+            name="priority"
+          />
+          <div class="ml-2">
+            <Label class="font-bold">{priority.name.toUpperCase()}</Label>
+            <p>{priority.description}</p>
+          </div>
         </div>
-      </div>
-    {/each}
+      {/each}
+    {/if}
+    {#if selectedType == 'request'}
+      {#each prioritiesRequest as priority}
+        <div class="flex row items-center mt-3">
+          <Radio
+            error={!!$page.form?.error?.fields?.priority}
+            id={priority.name}
+            bind:group={priorityType}
+            value={priority.name}
+            name="priority"
+          />
+          <div class="ml-2">
+            <Label class="font-bold">{priority.name.toUpperCase()}</Label>
+            <p>{priority.description}</p>
+          </div>
+        </div>
+      {/each}
+    {/if}
   </div>
-
-  {#if error}
-    <p>Something went wrong. Please try again or contact us.</p>
-  {/if}
 
   <Button class="mt-6" type="submit">Create ticket</Button>
 </form>
