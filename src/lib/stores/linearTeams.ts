@@ -1,7 +1,8 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
-import type { Team } from '../linear';
+
 import { toast } from '@significa/svelte-ui';
+import { TeamSchema, type Team } from '$lib/zodSchema';
 
 const getDefaultTeams = () => {
   try {
@@ -9,11 +10,11 @@ const getDefaultTeams = () => {
       const localStoreTeams = window.localStorage.getItem('linear-teams');
 
       if (localStoreTeams) {
-        const parsedTeams = JSON.parse(localStoreTeams);
+        const parsedLocalStorage = JSON.parse(localStoreTeams);
 
-        if (Array.isArray(parsedTeams)) {
-          return parsedTeams;
-        }
+        // zod validation
+        const teams = TeamSchema.array().parse(parsedLocalStorage);
+        return teams;
       }
     }
   } catch (err) {
