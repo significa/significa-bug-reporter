@@ -1,6 +1,7 @@
 import { linearClient } from '$lib/linear.js';
+import type { Load } from '@sveltejs/kit';
 
-export async function load({ params }) {
+export const load: Load = async ({ params }) => {
   try {
     const slug = params.slug;
     const regex = new RegExp(
@@ -8,7 +9,7 @@ export async function load({ params }) {
     );
 
     // old base64 cold
-    if (regex.test(slug)) {
+    if (slug && regex.test(slug)) {
       const id = Buffer.from(slug, 'base64').toString('utf-8');
       const { nodes } = await linearClient.teams({
         filter: {
@@ -51,4 +52,4 @@ export async function load({ params }) {
   } catch (error) {
     return null;
   }
-}
+};

@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
   import { goto } from '$app/navigation';
-  import type { Team } from '$lib/linear';
   import { linearTeams } from '$lib/stores/linearTeams';
-  import { toast } from '@significa/svelte-ui';
+  import type { Team } from '$lib/zodSchema';
+  import { Link, toast } from '@significa/svelte-ui';
   import { onMount } from 'svelte';
+
+  import '$styles/index.css';
 
   export let data: Team;
 
@@ -25,3 +26,6 @@
     }
   });
 </script>
+
+<p class="font-bold">Please stand by, you will be redirected soon ...</p>
+<Link href="/">If you were not redirected please click here.</Link>
