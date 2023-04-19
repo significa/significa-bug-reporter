@@ -1,9 +1,7 @@
 <script lang="ts">
-  import { Button, Input, ThemeSwitch } from '@significa/svelte-ui';
+  import { Button, Input } from '@significa/svelte-ui';
   import Name from './name.svelte';
   import { bugStore } from '$lib/stores/store';
-  import bugIcon from './ui/icons/bug.svg?raw';
-  import { theme } from '$lib/stores/theme';
 
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
@@ -17,18 +15,6 @@
   }
 </script>
 
-<div class="flex justify-center flex-col">
-  <div class="flex py-8 justify-between">
-    <span class="flex">
-      <i data-icon="bug" aria-hidden="true">
-        {@html bugIcon}
-      </i>
-      <p class="font-bold text-xl ml-2">Significa Bug Reporter</p>
-    </span>
-    <div class="flex">
-      <ThemeSwitch theme={$theme} on:toggle={theme.toogle} />
-    </div>
-  </div>
   {#if !$bugStore.userName}
     <div>
       <form on:submit|preventDefault={onSubmit}>
@@ -54,4 +40,3 @@
   {:else}
     <Name />
   {/if}
-</div>
