@@ -6,7 +6,7 @@
 </script>
 
 <div class="pb-8">
-  <div class="p-4" data-theme="yellow">
+  <div class="p-4 rounded-sm" data-theme="yellow">
     <h2>Reporting as {$bugStore.userName}</h2>
     <TextButton
       on:click={() => {

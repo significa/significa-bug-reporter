@@ -242,7 +242,7 @@
     <input type="hidden" name="attachments" bind:value={attachments} />
   </div>
 
-  <div class="mt-6 border p-2">
+  <div class="mt-6 border p-4 rounded-sm">
     <Label htmlFor="priority" required>Priority</Label>
     {#if selectedType == 'bug'}
       {#each priorities as priority}
