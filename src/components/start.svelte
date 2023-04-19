@@ -2,6 +2,8 @@
   import { Button, Input } from '@significa/svelte-ui';
   import Name from './name.svelte';
   import { bugStore } from '$lib/stores/store';
+  import bugIcon from './ui/icons/bug.svg?raw';
+  import { theme } from '$lib/stores/theme';
 
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
