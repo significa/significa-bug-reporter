@@ -62,7 +62,7 @@ const createTheme = () => {
       }
     },
     clearStore: () => update(() => []),
-    updateSore: (team: Team) =>
+    updateStore: (team: Team) =>
       update((prev) => {
         const exists = prev.find((val) => val.id === team.id);
         if (exists) {

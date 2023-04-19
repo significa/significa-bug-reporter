@@ -11,7 +11,7 @@
 
   onMount(() => {
     if (data.key) {
-      linearTeams.updateSore(data);
+      linearTeams.updateStore(data);
       toast.success({
         message: 'Team successfully migrated.'
       });
