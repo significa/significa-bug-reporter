@@ -13,7 +13,7 @@
     type FileUploadItem,
     toast
   } from '@significa/svelte-ui';
-  import { enhance, type SubmitFunction } from '$app/forms';
+  import { enhance } from '$app/forms';
   import { createEventDispatcher } from 'svelte';
   import { browser } from '$app/environment';
   import { linearTeams } from '$lib/stores/linearTeams';
