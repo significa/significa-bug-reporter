@@ -12,7 +12,7 @@
     type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
-    import { priorityType } from '$lib/types';
+  import { priorityType } from '$lib/types';
 
   let teams = $bugStore.teams;
 

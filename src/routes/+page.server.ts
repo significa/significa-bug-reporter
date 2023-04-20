@@ -29,17 +29,17 @@ export const actions: Actions = {
     }) => {
       const getPriorityLabel = (priority: string) => {
         if (priority === priorityType.Low) {
-          return '🟢  **Low**'
-        } 
+          return '🟢  **Low**';
+        }
         if (priority === priorityType.Medium) {
-          return '🟡  **Medium**'
-        } 
+          return '🟡  **Medium**';
+        }
         if (priority === priorityType.High) {
-          return '🟠  **High**'
-        } 
+          return '🟠  **High**';
+        }
         if (priority === priorityType.Critical) {
-          return '🔴  **Critical**'
-        } 
+          return '🔴  **Critical**';
+        }
       };
 
       let payload = `## Description\n___ \n${description}`;
