@@ -8,6 +8,6 @@
   }
 </script>
 
-<div class="p-10">
+<div class="container px-container @container px-8 max-w-2xl mx-auto">
   <Start />
 </div>

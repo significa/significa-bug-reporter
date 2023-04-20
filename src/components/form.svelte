@@ -1,16 +1,18 @@
 <script lang="ts">
   import { bugStore } from '$lib/store';
+  import { page } from '$app/stores';
 
   import {
     Button,
     Input,
-    FloatingSelect,
     Radio,
     Label,
+    Select,
     FileUpload,
     type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
+  import { priorityType } from '$lib/types';
 
   let teams = $bugStore.teams;
 
@@ -20,79 +22,114 @@
     attachments = files
       .filter((f) => f.status === 'success')
       .map((f) => f.url)
-      .join(',');
+      .join(', ');
   } else {
     attachments = '';
   }
 
-  let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
     {
-      name: 'Low',
+      name: priorityType.Low,
       description:
         'A non-urgent bug, this bug does not affect core functionality of the product'
     },
     {
-      name: 'Medium',
+      name: priorityType.Medium,
       description:
         'This bug affects functionality but on a non-core user journey.'
     },
     {
-      name: 'High',
+      name: priorityType.High,
       description:
         'This bug is causing core-functionality problems but not breaking the product.'
     },
     {
-      name: 'Critical',
+      name: priorityType.Critical,
       description: 'The product can not function with this bug.'
+    }
+  ];
+  const prioritiesRequest = [
+    {
+      name: priorityType.Low,
+      description: 'A non-urgent request, to be tackled whenever theres time.'
+    },
+    {
+      name: priorityType.Medium,
+      description: 'This request is important but on a non-core user journey.'
+    },
+    {
+      name: priorityType.High,
+      description:
+        'This is a core-functionality request that needs to be tackled as soon as possible.'
+    },
+    {
+      name: priorityType.Critical,
+      description: 'The product can not function without this.'
     }
   ];
 
   $: selectedType = 'bug';
-  let error = false;
 
   // To prevent the page to update
   const onSubmit: SubmitFunction = (input) => {
-    console.log(input);
+    //console.log(input);
   };
 </script>
 
 <form action="?/submitReport" method="POST" use:enhance={onSubmit}>
+  <input type="hidden" name="author" value={$bugStore.userName} />
   {#if teams}
     <div class="mt-6">
-      <Label htmlFor="team" required>Team</Label>
-      <FloatingSelect label="Select a team" name="team" id="team">
+      <Label for="team" class="font-medium text-base">Team</Label>
+      <Select
+        label="Select a team"
+        name="teamId"
+        id="team"
+        error={!!$page.form?.error?.fields?.teamId}
+      >
         {#each teams as team}
           <option value={team.id}>
             {team.name}
           </option>
         {/each}
-      </FloatingSelect>
+      </Select>
     </div>
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="type" required>Type</Label>
-    <FloatingSelect
+    <Label for="type" class="font-medium text-base">Type</Label>
+    <Select
       label="Type"
       name="type"
       id="type"
       bind:value={selectedType}
+      error={!!$page.form?.error?.fields?.type}
     >
       <option value="bug">Bug</option>
       <option value="request">Request</option>
-    </FloatingSelect>
+    </Select>
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="title" required>Title</Label>
-    <Input name="title" id="title" placeholder="Title" value="" />
-  </div>
-
-  <div class="mt-6">
-    <Label htmlFor="description" required>Description</Label>
-    <p>Try to be as descriptive as possible.</p>
+    <Label for="title" class="font-medium text-base">Title</Label>
     <Input
+      name="title"
+      id="title"
+      placeholder="Title"
+      value=""
+      error={!!$page.form?.error?.fields?.title}
+    />
+  </div>
+
+  <div class="mt-6">
+    <Label for="description" class="text-foreground text-base font-medium"
+      >Description</Label
+    >
+    <p class="text-sm/none text-foreground-secondary mb-2">
+      Try to be as descriptive as possible.
+    </p>
+    <Input
+      error={!!$page.form?.error?.fields?.description}
       as="textarea"
       name="description"
       id="description"
@@ -103,9 +140,14 @@
 
   {#if selectedType == 'bug'}
     <div class="mt-6">
-      <Label htmlFor="steps" required>Steps to reproduce</Label>
-      <p>Detailed instructions on how to reproduce this issue</p>
+      <Label for="steps" class="text-foreground text-base font-medium"
+        >Steps to reproduce</Label
+      >
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Detailed instructions on how to reproduce this issue
+      </p>
       <Input
+        error={!!$page.form?.error?.fields?.steps}
         as="textarea"
         name="steps"
         id="steps"
@@ -115,9 +157,14 @@
     </div>
 
     <div class="mt-6">
-      <Label htmlFor="technical" required>Technical Information</Label>
-      <p>Your Operating System, Browser, Device, etc.</p>
+      <Label for="technical" class="text-foreground text-base font-medium"
+        >Technical Information</Label
+      >
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Your Operating System, Browser, Device, etc.
+      </p>
       <Input
+        error={!!$page.form?.error?.fields?.technical}
         as="textarea"
         name="technical"
         id="technical"
@@ -128,8 +175,10 @@
   {/if}
 
   <div class="mt-6">
-    <Label>Attachments</Label>
-    <p>Add attachment</p>
+    <Label for="attachements" class="text-foreground text-base font-medium"
+      >Attachments</Label
+    >
+    <p class="text-sm/none text-foreground-secondary mb-2">Add attachment</p>
     <FileUpload
       multiple
       name="files"
@@ -149,27 +198,44 @@
   </div>
 
   <div class="mt-6 border p-2">
-    <Label htmlFor="priority" required>Priority</Label>
-
-    {#each priorities as priority}
-      <div class="flex row items-center mt-3">
-        <Radio
-          id={priority.name}
-          bind:group={priorityType}
-          value={priority.name}
-          name="priority"
-        />
-        <div class="ml-2">
-          <Label class="font-bold">{priority.name}</Label>
-          <p>{priority.description}</p>
+    <Label for="priority" required>Priority</Label>
+    {#if selectedType == 'bug'}
+      {#each priorities as priority}
+        <div class="flex row items-center mt-3">
+          <Radio
+            error={!!$page.form?.error?.fields?.priority}
+            id={priority.name}
+            value={priority.name}
+            name="priority"
+          />
+          <div class="ml-2">
+            <Label for={priority.name} class="font-bold"
+              >{priority.name}
+              <p class="font-normal text-sm">{priority.description}</p>
+            </Label>
+          </div>
         </div>
-      </div>
-    {/each}
+      {/each}
+    {/if}
+    {#if selectedType == 'request'}
+      {#each prioritiesRequest as priority}
+        <div class="flex row items-center mt-3">
+          <Radio
+            error={!!$page.form?.error?.fields?.priority}
+            id={priority.name}
+            value={priority.name}
+            name="priority"
+          />
+          <div class="ml-2">
+            <Label for={priority.name} class="font-bold"
+              >{priority.name}
+              <p class="font-normal text-sm">{priority.description}</p>
+            </Label>
+          </div>
+        </div>
+      {/each}
+    {/if}
   </div>
-
-  {#if error}
-    <p>Something went wrong. Please try again or contact us.</p>
-  {/if}
 
   <Button class="mt-6" type="submit">Create ticket</Button>
 </form>

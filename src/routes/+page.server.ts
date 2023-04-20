@@ -1,6 +1,9 @@
-import { getTeams } from '$lib/linear';
-import { fail, type Actions } from '@sveltejs/kit';
-import { validateForm } from '../utils/validateForm';
+import { handleContactForm } from '$lib/forms';
+import { getTeams, linearClient } from '$lib/linear';
+import { priorityType } from '$lib/types';
+import type { Actions } from '@sveltejs/kit';
+
+import 'dotenv/config';
 
 export const load = async () => {
   try {
@@ -12,18 +15,59 @@ export const load = async () => {
 };
 
 export const actions: Actions = {
-  submitReport: async ({ request }) => {
-    const formData = await request.formData();
-    const isValid = validateForm(formData);
+  submitReport: handleContactForm(
+    async ({
+      description,
+      title,
+      teamId,
+      author,
+      priority,
+      attachments,
+      type,
+      steps,
+      technical
+    }) => {
+      const getPriorityLabel = (priority: `${priorityType}` | string) => {
+        if (priority === priorityType.Medium) {
+          return '🟡  **Medium**';
+        }
+        if (priority === priorityType.High) {
+          return '🟠  **High**';
+        }
+        if (priority === priorityType.Critical) {
+          return '🔴  **Critical**';
+        }
+        return '🟢  **Low**';
+      };
 
-    if (!isValid) {
-      return fail(400, { message: 'Error' });
-    }
+      let payload = `## Description\n___ \n${description}`;
 
-    const data: any = {};
-    for (const field of formData) {
-      const [key, value] = field;
-      data[key] = value;
+      if (type === 'bug') {
+        payload +=
+          '&nbsp;  \n' +
+          '&nbsp;  \n' +
+          '## Steps to reproduce\n' +
+          '___ \n' +
+          steps +
+          '&nbsp;  \n' +
+          '&nbsp;  \n' +
+          '## Technical Information\n' +
+          '___ \n' +
+          technical;
+      }
+
+      payload +=
+        '&nbsp;  \n' +
+        '&nbsp;  \n' +
+        attachments +
+        '&nbsp;  \n' +
+        `${getPriorityLabel(priority)} priority ${type} reported by ${author}`;
+
+      await linearClient.createIssue({
+        teamId,
+        title: `[${type}] ${title}`,
+        description: payload
+      });
     }
-  }
+  )
 };
