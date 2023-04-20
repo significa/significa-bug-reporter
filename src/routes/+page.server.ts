@@ -27,10 +27,7 @@ export const actions: Actions = {
       steps,
       technical
     }) => {
-      const getPriorityLabel = (priority: string) => {
-        if (priority === priorityType.Low) {
-          return '🟢  **Low**';
-        }
+      const getPriorityLabel = (priority: `${priorityType}`) => {
         if (priority === priorityType.Medium) {
           return '🟡  **Medium**';
         }
@@ -40,6 +37,7 @@ export const actions: Actions = {
         if (priority === priorityType.Critical) {
           return '🔴  **Critical**';
         }
+        return '🟢  **Low**';
       };
 
       let payload = `## Description\n___ \n${description}`;
@@ -63,7 +61,9 @@ export const actions: Actions = {
         '&nbsp;  \n' +
         attachments +
         '&nbsp;  \n' +
-        `${getPriorityLabel(priority)} priority ${type} reported by ${author}`;
+        `${getPriorityLabel(
+          priority as priorityType
+        )} priority ${type} reported by ${author}`;
 
       await linearClient.createIssue({
         teamId,
