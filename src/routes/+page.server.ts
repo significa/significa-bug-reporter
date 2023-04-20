@@ -1,5 +1,6 @@
 import { handleContactForm } from '$lib/forms';
 import { getTeams, linearClient } from '$lib/linear';
+import { priorityType } from '$lib/types';
 import type { Actions } from '@sveltejs/kit';
 
 import 'dotenv/config';
@@ -26,11 +27,19 @@ export const actions: Actions = {
       steps,
       technical
     }) => {
-      const priorityLabel: Record<string, string> = {
-        low: '🟢  **Low**',
-        medium: '🟡  **Medium**',
-        high: '🟠  **High**',
-        critical: '🔴  **Critical**'
+      const getPriorityLabel = (priority: string) => {
+        if (priority === priorityType.Low) {
+          return '🟢  **Low**'
+        } 
+        if (priority === priorityType.Medium) {
+          return '🟡  **Medium**'
+        } 
+        if (priority === priorityType.High) {
+          return '🟠  **High**'
+        } 
+        if (priority === priorityType.Critical) {
+          return '🔴  **Critical**'
+        } 
       };
 
       let payload = `## Description\n___ \n${description}`;
@@ -54,7 +63,7 @@ export const actions: Actions = {
         '&nbsp;  \n' +
         attachments +
         '&nbsp;  \n' +
-        `${priorityLabel[priority]} priority ${type} reported by ${author}`;
+        `${getPriorityLabel(priority)} priority ${type} reported by ${author}`;
 
       await linearClient.createIssue({
         teamId,

@@ -7,15 +7,14 @@
     Input,
     Radio,
     Label,
-    FileInput,
     Select,
     FileUpload,
     type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
+    import { priorityType } from '$lib/types';
 
   let teams = $bugStore.teams;
-  let author = $bugStore.userName;
 
   let files: FileUploadItem[] = [];
   let attachments = '';
@@ -28,44 +27,43 @@
     attachments = '';
   }
 
-  let priorityType = 'low' || 'high' || 'medium' || 'critical';
   const priorities = [
     {
-      name: 'low',
+      name: priorityType.Low,
       description:
         'A non-urgent bug, this bug does not affect core functionality of the product'
     },
     {
-      name: 'medium',
+      name: priorityType.Medium,
       description:
         'This bug affects functionality but on a non-core user journey.'
     },
     {
-      name: 'high',
+      name: priorityType.High,
       description:
         'This bug is causing core-functionality problems but not breaking the product.'
     },
     {
-      name: 'critical',
+      name: priorityType.Critical,
       description: 'The product can not function with this bug.'
     }
   ];
   const prioritiesRequest = [
     {
-      name: 'low',
+      name: priorityType.Low,
       description: 'A non-urgent request, to be tackled whenever theres time.'
     },
     {
-      name: 'medium',
+      name: priorityType.Medium,
       description: 'This request is important but on a non-core user journey.'
     },
     {
-      name: 'high',
+      name: priorityType.High,
       description:
         'This is a core-functionality request that needs to be tackled as soon as possible.'
     },
     {
-      name: 'critical',
+      name: priorityType.Critical,
       description: 'The product can not function without this.'
     }
   ];
@@ -79,10 +77,10 @@
 </script>
 
 <form action="?/submitReport" method="POST" use:enhance={onSubmit}>
-  <input type="hidden" name="author" bind:value={author} />
+  <input type="hidden" name="author" value={$bugStore.userName} />
   {#if teams}
     <div class="mt-6">
-      <Label htmlFor="team" class="font-medium text-base">Team</Label>
+      <Label for="team" class="font-medium text-base">Team</Label>
       <Select
         label="Select a team"
         name="teamId"
@@ -99,7 +97,7 @@
   {/if}
 
   <div class="mt-6">
-    <Label htmlFor="type" class="font-medium text-base">Type</Label>
+    <Label for="type" class="font-medium text-base">Type</Label>
     <Select
       label="Type"
       name="type"
@@ -113,7 +111,7 @@
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="title" class="font-medium text-base">Title</Label>
+    <Label for="title" class="font-medium text-base">Title</Label>
     <Input
       name="title"
       id="title"
@@ -124,7 +122,7 @@
   </div>
 
   <div class="mt-6">
-    <Label htmlFor="description" class="text-foreground text-base font-medium"
+    <Label for="description" class="text-foreground text-base font-medium"
       >Description</Label
     >
     <p class="text-sm/none text-foreground-secondary mb-2">
@@ -142,7 +140,7 @@
 
   {#if selectedType == 'bug'}
     <div class="mt-6">
-      <Label htmlFor="steps" class="text-foreground text-base font-medium"
+      <Label for="steps" class="text-foreground text-base font-medium"
         >Steps to reproduce</Label
       >
       <p class="text-sm/none text-foreground-secondary mb-2">
@@ -159,7 +157,7 @@
     </div>
 
     <div class="mt-6">
-      <Label htmlFor="technical" class="text-foreground text-base font-medium"
+      <Label for="technical" class="text-foreground text-base font-medium"
         >Technical Information</Label
       >
       <p class="text-sm/none text-foreground-secondary mb-2">
@@ -200,14 +198,13 @@
   </div>
 
   <div class="mt-6 border p-2">
-    <Label htmlFor="priority" required>Priority</Label>
+    <Label for="priority" required>Priority</Label>
     {#if selectedType == 'bug'}
       {#each priorities as priority}
         <div class="flex row items-center mt-3">
           <Radio
             error={!!$page.form?.error?.fields?.priority}
             id={priority.name}
-            bind:group={priorityType}
             value={priority.name}
             name="priority"
           />
@@ -226,7 +223,6 @@
           <Radio
             error={!!$page.form?.error?.fields?.priority}
             id={priority.name}
-            bind:group={priorityType}
             value={priority.name}
             name="priority"
           />
