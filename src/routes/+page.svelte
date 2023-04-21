@@ -1,10 +1,10 @@
 <script lang="ts">
   import '$styles/index.css';
   import Start from '$components/start.svelte';
-  export let data: any;
-  import { bugStore } from '$lib/store';
-  if (data) {
-    bugStore.setTeams(data.teams);
+  import { bugStore } from '$lib/stores/store';
+
+  if (!$bugStore) {
+    bugStore.setUser(null);
   }
 </script>
 

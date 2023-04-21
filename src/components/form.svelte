@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { bugStore } from '$lib/store';
+  import { bugStore } from '$lib/stores/store';
   import { page } from '$app/stores';
 
   import {
@@ -12,6 +12,7 @@
     type FileUploadItem
   } from '@significa/svelte-ui';
   import { enhance, type SubmitFunction } from '$app/forms';
+  import { linearTeams } from '$lib/stores/linearTeams';
   import { priorityType } from '$lib/types';
 
   let teams = $bugStore.teams;
@@ -70,15 +71,24 @@
 
   $: selectedType = 'bug';
 
+  let showTeamInput = false;
+
   // To prevent the page to update
   const onSubmit: SubmitFunction = (input) => {
     //console.log(input);
   };
+
+  let key = '';
 </script>
 
-<form action="?/submitReport" method="POST" use:enhance={onSubmit}>
+<form
+  action="?/submitReport"
+  method="POST"
+  use:enhance={onSubmit}
+  on:keydown={(event) => event.key != 'Enter'}
+>
   <input type="hidden" name="author" value={$bugStore.userName} />
-  {#if teams}
+  {#if !!$linearTeams.length}
     <div class="mt-6">
       <Label for="team" class="font-medium text-base">Team</Label>
       <Select
@@ -87,13 +97,48 @@
         id="team"
         error={!!$page.form?.error?.fields?.teamId}
       >
-        {#each teams as team}
+        {#each $linearTeams as team}
           <option value={team.id}>
             {team.name}
           </option>
         {/each}
       </Select>
     </div>
+  {/if}
+
+  {#if showTeamInput}
+    <div class="mt-6">
+      <Label htmlFor="technical" class="font-medium text-base">Add team</Label>
+      <p class="text-sm/none text-foreground-secondary mb-2">
+        Please provide the code of the team.
+      </p>
+      <Input
+        as="input"
+        name="addTeam"
+        id="addTeam"
+        placeholder="Add code of the team"
+        bind:value={key}
+      />
+      <Button
+        type="button"
+        variant="secondary"
+        class="mt-3"
+        disabled={!key}
+        on:click={() => {
+          linearTeams.fetch(key);
+          showTeamInput = false;
+          key = '';
+        }}>Add</Button
+      >
+    </div>
+  {/if}
+
+  {#if !showTeamInput}
+    <Button
+      variant="secondary"
+      class="mt-6"
+      on:click={() => (showTeamInput = true)}>Add team</Button
+    >
   {/if}
 
   <div class="mt-6">
@@ -197,7 +242,7 @@
     <input type="hidden" name="attachments" bind:value={attachments} />
   </div>
 
-  <div class="mt-6 border p-2">
+  <div class="mt-6 border p-4 rounded-sm">
     <Label for="priority" required>Priority</Label>
     {#if selectedType == 'bug'}
       {#each priorities as priority}

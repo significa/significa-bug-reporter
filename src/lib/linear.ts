@@ -1,18 +1,13 @@
+import { LINEAR_OAUTH_ACCESS_TOKEN } from '$env/static/private';
 import { LinearClient } from '@linear/sdk';
-import 'dotenv/config';
+import type { Team } from './zodSchema';
 
 // Api key authentication
 export const linearClient = new LinearClient({
-  accessToken: process.env.LINEAR_OAUTH_ACCESS_TOKEN
+  accessToken: LINEAR_OAUTH_ACCESS_TOKEN
 });
 
-export const getTeams = async (): Promise<
-  | {
-      name: string;
-      id: string;
-    }[]
-  | null
-> => {
+export const getTeams = async (): Promise<Team[] | null> => {
   try {
     const { nodes } = await linearClient.teams();
 
@@ -20,7 +15,8 @@ export const getTeams = async (): Promise<
     const teams = nodes.map((node) => {
       return {
         name: node.name,
-        id: node.id
+        id: node.id,
+        key: node.key
       };
     });
     return teams;

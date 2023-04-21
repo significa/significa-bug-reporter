@@ -9,7 +9,7 @@ const isTheme = (theme: string): theme is Theme => {
   return themes.includes(theme);
 };
 
-const getFromLocalStorage = (): Theme => {
+const getTheme = (): Theme => {
   if (browser) {
     const q = window.matchMedia('(prefers-color-scheme: dark)');
     const localStoreTheme = window.localStorage.getItem('theme');
@@ -25,7 +25,7 @@ const getFromLocalStorage = (): Theme => {
 };
 
 const createTheme = () => {
-  const { subscribe, update } = writable<Theme>(getFromLocalStorage());
+  const { subscribe, update } = writable<Theme>(getTheme());
 
   return {
     subscribe,

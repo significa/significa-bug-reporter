@@ -1,12 +1,7 @@
 import { writable } from 'svelte/store';
 
-type Team = {
-  id: string;
-  name: string;
-};
 type BugReporter = {
   userName: string | null;
-  teams: Team[];
 };
 const isBrowser = typeof window !== 'undefined';
 
@@ -27,10 +22,6 @@ const createBugReporter = () => {
     setUser: (user: string | null) =>
       update((prev) => {
         return { ...prev, userName: user };
-      }),
-    setTeams: (teams: Team[]) =>
-      update((prev) => {
-        return { ...prev, teams };
       })
   };
 };

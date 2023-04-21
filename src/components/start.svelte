@@ -1,9 +1,9 @@
 <script lang="ts">
   import { Button, Input, ThemeSwitch } from '@significa/svelte-ui';
   import Name from './name.svelte';
-  import { bugStore } from '$lib/store';
+  import { bugStore } from '$lib/stores/store';
   import bugIcon from './ui/icons/bug.svg?raw';
-  import { theme } from '$lib/theme';
+  import { theme } from '$lib/stores/theme';
 
   function onSubmit(e: any) {
     const formData = new FormData(e.target);
@@ -29,7 +29,6 @@
       <ThemeSwitch theme={$theme} on:toggle={theme.toogle} />
     </div>
   </div>
-
   {#if !$bugStore.userName}
     <div>
       <form on:submit|preventDefault={onSubmit}>
