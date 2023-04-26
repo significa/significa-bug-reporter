@@ -1,6 +1,7 @@
 <script lang="ts">
   import { bugStore } from '$lib/stores/store';
   import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
 
   import {
     Button,
@@ -9,9 +10,12 @@
     Label,
     Select,
     FileUpload,
-    type FileUploadItem
+    type FileUploadItem,
+    toast
   } from '@significa/svelte-ui';
-  import { enhance, type SubmitFunction } from '$app/forms';
+  import { enhance } from '$app/forms';
+  import { createEventDispatcher } from 'svelte';
+  import { browser } from '$app/environment';
   import { linearTeams } from '$lib/stores/linearTeams';
   import { priorityType } from '$lib/types';
 
@@ -69,22 +73,53 @@
     }
   ];
 
+  let loading = false;
+
   $: selectedType = 'bug';
 
+  const dispatch = createEventDispatcher<{
+    success: undefined;
+    error: string;
+  }>();
+
+  $: if ($page.form?.success) {
+    dispatch('success');
+    toast.success({
+      message: 'test',
+      timeout: 8000
+    });
+    goto('/success');
+  }
+  $: if ($page.form?.error) {
+    dispatch('error', $page.form.error.type);
+    if (browser) {
+      if ($page.form?.error?.type === 'notion') {
+        toast.error({
+          message: 'Something went wrong :(',
+          description: 'Please try again!',
+          timeout: 0
+        });
+      }
+    }
+  }
+
   let showTeamInput = false;
-
-  // To prevent the page to update
-  const onSubmit: SubmitFunction = (input) => {
-    //console.log(input);
-  };
-
   let key = '';
 </script>
 
 <form
   action="?/submitReport"
   method="POST"
-  use:enhance={onSubmit}
+  use:enhance={() => {
+    loading = true;
+
+    return async ({ update }) => {
+      loading = false;
+      files = [];
+
+      await update();
+    };
+  }}
   on:keydown={(event) => event.key != 'Enter'}
 >
   <input type="hidden" name="author" value={$bugStore.userName} />
@@ -282,5 +317,5 @@
     {/if}
   </div>
 
-  <Button class="mt-6" type="submit">Create ticket</Button>
+  <Button {loading} class="mt-6" type="submit">Create ticket</Button>
 </form>
