@@ -1,4 +1,4 @@
-import 'dotenv';
+import { AWS_S3_BUCKET } from '$env/static/private';
 import { getS3Client } from '$lib/aws.server';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -24,7 +24,7 @@ export const GET = async ({ url }: any) => {
     const url = await getSignedUrl(
       s3Client,
       new PutObjectCommand({
-        Bucket: process.env.AWS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: `${uuid}.${getFileExtension(name)}`,
         ContentType: type
       })

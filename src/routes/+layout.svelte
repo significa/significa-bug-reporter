@@ -8,6 +8,7 @@
   import { beforeNavigate } from '$app/navigation';
   import bugIcon from '../components/ui/icons/bug.svg?raw';
   import { theme } from '$lib/stores/theme';
+
   beforeNavigate(() => {
     toast.clearAll();
   });
