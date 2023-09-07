@@ -1,4 +1,11 @@
-<h1>Welcome to SvelteKit</h1>
-<p>
-  Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+<script lang="ts">
+  import '$styles/index.css';
+  import Start from '$components/start.svelte';
+  import { bugStore } from '$lib/stores/store';
+
+  if (!$bugStore) {
+    bugStore.setUser(null);
+  }
+</script>
+
+<Start />
