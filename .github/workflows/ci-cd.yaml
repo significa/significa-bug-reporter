@@ -20,6 +20,8 @@ jobs:
     uses: significa/actions/.github/workflows/vercel-app.yaml@main
     with:
       test_command: null
+      npm_scope: '@significa'
+      install_registry_url: 'https://npm.pkg.github.com/'
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
