@@ -19,8 +19,6 @@
   import { linearTeams } from '$lib/stores/linearTeams';
   import { priorityType } from '$lib/types';
 
-  let teams = $bugStore.teams;
-
   let files: FileUploadItem[] = [];
   let attachments = '';
   $: if (files.length > 0) {
@@ -93,7 +91,7 @@
   $: if ($page.form?.error) {
     dispatch('error', $page.form.error.type);
     if (browser) {
-      if ($page.form?.error?.type === 'notion') {
+      if ($page.form?.error?.type === 'notion' || $page.form?.error?.type === 'linear') {
         toast.error({
           message: 'Something went wrong :(',
           description: 'Please try again!',
@@ -116,7 +114,6 @@
     return async ({ update }) => {
       loading = false;
       files = [];
-
       await update();
     };
   }}
